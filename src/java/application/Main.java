@@ -1,10 +1,9 @@
 package application;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
 
 
 public class Main extends Application {
@@ -36,36 +36,20 @@ public class Main extends Application {
     }
 
     public void initWindow() {
-        Stage stage = new Stage(StageStyle.DECORATED);
-        stage.setTitle(WINDOW_TITLE);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/regLayout.fxml"));
+            Parent root = loader.load();
 
-        Button regButton = new Button();
-        regButton.setText("Create account");
-        regButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                String username = usernameField.getText().trim();
-                String email = emailField.getText().trim();
-                String password = passwordField.getText().trim();
-                String passwordCheck = passwordCheckField.getText().trim();
-
-                if (!password.equals(passwordCheck)) {
-                    System.out.println("Passwords do not match!");
-                    return;
-                }
-
-                Register.registerUser(username, email, password);
-            }
-        });
-
-        VBox root = getVBox();
-
-        root.getChildren().add(regButton);
-        root.setStyle("-fx-background-color: darkcyan;");
-        Scene scene = new Scene(root, 1400, 700);
-        stage.setScene(scene);
-        stage.show();
+            Scene scene = new Scene(root, 600, 400);
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle(WINDOW_TITLE);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private VBox getVBox() {
         Label welcomeLabel = new Label("Welcome to Password Manager Alpha!");
