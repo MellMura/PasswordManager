@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 public class Register {
-    public static void registerUser(String username, String email, String password) {
+    public static boolean registerUser(String username, String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -26,16 +26,21 @@ public class Register {
 
                 if (rowsInserted > 0) {
                     System.out.println("User registered successfully!");
+                    return true;
                 } else {
                     System.out.println("User registration failed.");
+                    return false;
                 }
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Error: That email is already registered.");
+                return false;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return false;
             }
         } else {
             System.out.println("Database connection failed.");
+            return false;
         }
     }
 }

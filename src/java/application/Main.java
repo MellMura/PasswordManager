@@ -27,6 +27,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            setUpDB.initializeDB();
             initWindow();
         } catch(Exception e) {
             e.printStackTrace();
@@ -47,6 +48,4 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-
 }

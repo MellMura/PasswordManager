@@ -33,21 +33,26 @@ public class RegLayout {
                 System.out.println("Passwords do not match!");
                 return;
             }
-
-            Register.registerUser(username, email, password);
+            boolean success = Register.registerUser(username, email, password);
+            if (success) {
+                switchToLoginScene();
+            }
         });
     }
 
-    @FXML
-    private void switchToLogin(ActionEvent event) {
+    private void switchToLoginScene() {
         try {
             Parent loginRoot = FXMLLoader.load(getClass().getResource("/layouts/loginLayout.fxml"));
             Scene loginScene = new Scene(loginRoot);
-            Stage stage = (Stage) switchToLoginLink.getScene().getWindow();
+            Stage stage = (Stage) createAccountButton.getScene().getWindow();
             stage.setScene(loginScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @FXML
+    private void switchToLogin(ActionEvent event) {
+        switchToLoginScene();
+    }
 }
