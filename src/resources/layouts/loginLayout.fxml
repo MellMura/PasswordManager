@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RegLayout">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginLayout">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -19,12 +19,6 @@
                   <Font name="Lucida Sans Typewriter Bold" size="13.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="18.0" prefWidth="113.0" text="Create a Username:" textAlignment="CENTER">
-               <font>
-                  <Font name="SimSun" size="12.0" />
-               </font>
-            </Label>
-            <TextField fx:id="usernameField" alignment="CENTER" prefHeight="26.0" prefWidth="597.0" style="-fx-max-width: 250;" />
 
             <Label alignment="CENTER" prefHeight="18.0" prefWidth="113.0" text="Enter your E-mail:" textAlignment="CENTER">
                <font>
@@ -32,26 +26,20 @@
                </font>
             </Label>
             <TextField fx:id="emailField" alignment="CENTER" prefHeight="26.0" prefWidth="597.0" style="-fx-max-width: 250;" />
-            <Label alignment="CENTER" prefHeight="18.0" prefWidth="210.0" text="Create a strong Master Password:" textAlignment="CENTER">
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="210.0" text="Enter your password:" textAlignment="CENTER">
                <font>
                   <Font name="SimSun" size="12.0" />
                </font>
             </Label>
             <PasswordField fx:id="passwordField" style="-fx-max-width: 250;" />
-            <Label alignment="CENTER" prefHeight="18.0" prefWidth="130.0" text="Repeat Password:" textAlignment="CENTER">
-               <font>
-                  <Font name="SimSun" size="12.0" />
-               </font>
-            </Label>
-            <PasswordField fx:id="passwordCheckField" style="-fx-max-width: 250;" />
-            <HBox alignment="CENTER" prefHeight="42.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="42.0" prefWidth="434.0">
                <children>
-                  <Button fx:id="createAccountButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="124.0" text="Create an account">
+                  <Button fx:id="loginButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" text="Log in">
                      <font>
                         <Font name="SimSun" size="12.0" />
                      </font>
                   </Button>
-                  <Hyperlink fx:id="switchToLoginLink" onAction="#switchToLogin" alignment="CENTER_RIGHT" prefHeight="34.0" prefWidth="125.0" text="Already have one?">
+                  <Hyperlink fx:id="switchToRegLink" alignment="CENTER_RIGHT" onAction="#switchToReg" prefHeight="34.0" prefWidth="154.0" text="Don't have an account?">
                   <font>
                         <Font name="SimSun" size="12.0" />
                      </font>

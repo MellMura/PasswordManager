@@ -1,9 +1,16 @@
 package application;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class RegLayout {
 
@@ -12,7 +19,7 @@ public class RegLayout {
     @FXML private TextField passwordField;
     @FXML private TextField passwordCheckField;
     @FXML private Button createAccountButton;
-    @FXML private Hyperlink alreadyHaveOne;
+    @FXML private Hyperlink switchToLoginLink;
 
     @FXML
     public void initialize() {
@@ -30,4 +37,17 @@ public class RegLayout {
             Register.registerUser(username, email, password);
         });
     }
+
+    @FXML
+    private void switchToLogin(ActionEvent event) {
+        try {
+            Parent loginRoot = FXMLLoader.load(getClass().getResource("/layouts/loginLayout.fxml"));
+            Scene loginScene = new Scene(loginRoot);
+            Stage stage = (Stage) switchToLoginLink.getScene().getWindow();
+            stage.setScene(loginScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -17,11 +17,6 @@ import java.io.IOException;
 public class Main extends Application {
     private static final String WINDOW_TITLE = "TEST PASSWORD MANAGER";
 
-    private TextField usernameField;
-    private TextField emailField;
-    private TextField passwordField;
-    private TextField passwordCheckField;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -48,33 +43,6 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    private VBox getVBox() {
-        Label welcomeLabel = new Label("Welcome to Password Manager Alpha!");
-        Label regLabel = new Label("Let's create your personal account");
-
-        Label usernameLabel = new Label("Create a Username:");
-        usernameField = new TextField();
-        usernameField.setFocusTraversable(false);
-
-        Label emailLabel = new Label("Enter your Email:");
-        emailField = new TextField();
-        emailField.setFocusTraversable(false);
-
-        Label passwordLabel = new Label("Create a strong Master Password:");
-        passwordField = new PasswordField();
-        passwordField.setFocusTraversable(false);
-
-        Label passwordCheckLabel = new Label("Repeat your Password:");
-        passwordCheckField = new PasswordField();
-        passwordCheckField.setFocusTraversable(false);
-
-        VBox root = new VBox(10);
-        Node[] elements = { welcomeLabel, regLabel, usernameLabel, usernameField, emailLabel, emailField, passwordLabel, passwordField, passwordCheckLabel, passwordCheckField };
-        root.getChildren().addAll(elements);
-        return root;
     }
 
 
