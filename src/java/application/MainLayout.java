@@ -52,7 +52,13 @@ public class MainLayout {
 
         String iconPath = FileSaver.saveToUploads(selectedIconFile);
 
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            System.out.println("All fields are required.");
+            return;
+        }
+
         AccountManager.saveAccount(name, colorHex, iconPath, email, password);
+        closeForm();
     }
 
 

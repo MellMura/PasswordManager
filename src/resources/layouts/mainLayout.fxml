@@ -19,7 +19,7 @@
             <StackPane>
                <children>
                   <TilePane alignment="BOTTOM_CENTER" prefHeight="355.0" prefWidth="600.0" />
-                  <SubScene fx:id="formSubScene" fill="#4daba5" height="300.0" visible="false" width="580.0">
+                  <SubScene fx:id="formSubScene" fill="#4daba5" height="250.0" visible="false" width="200.0">
                      <root>
                         <VBox xmlns="http://javafx.com/javafx/23.0.1"
                               xmlns:fx="http://javafx.com/fxml"

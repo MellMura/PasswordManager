@@ -24,6 +24,11 @@ public class LoginLayout {
             String email = emailField.getText().trim();
             String password = passwordField.getText().trim();
 
+            if (email.isEmpty() || password.isEmpty()) {
+                System.out.println("All fields are required.");
+                return;
+            }
+
             boolean success = Login.loginUser(email, password);
 
             if (success) {

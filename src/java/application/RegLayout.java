@@ -33,6 +33,12 @@ public class RegLayout {
                 System.out.println("Passwords do not match!");
                 return;
             }
+
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                System.out.println("All fields are required.");
+                return;
+            }
+
             boolean success = Register.registerUser(username, email, password);
             if (success) {
                 switchToLoginScene();
