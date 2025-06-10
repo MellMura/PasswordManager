@@ -12,12 +12,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Main extends Application {
     private static final String WINDOW_TITLE = "TEST PASSWORD MANAGER";
 
     public static void main(String[] args) {
+        Logger.getLogger("javafx.fxml").setLevel(Level.SEVERE);
         launch(args);
     }
 
