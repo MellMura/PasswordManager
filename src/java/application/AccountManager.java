@@ -10,16 +10,24 @@ public class AccountManager {
 
         if (connection != null) {
             try {
+                String encryptedPassword;
+                try {
+                    encryptedPassword = EncryptionHandler.encrypt(password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Password encryption failed.");
+                    return false;
+                }
+
                 String sql = "INSERT INTO saved_accounts (name, email, password, icon_url, color) VALUES (?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, email);
-                preparedStatement.setString(3, password);
+                preparedStatement.setString(3, encryptedPassword);
                 preparedStatement.setString(4, icon_path);
                 preparedStatement.setString(5, colorHex);
-
 
                 int rowsInserted = preparedStatement.executeUpdate();
 

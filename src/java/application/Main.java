@@ -28,6 +28,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             setUpDB.initializeDB();
+            EnvHandler.loadEnv(".env");
+            EncryptionHandler.generateAndStoreKey("keystore.jceks", EnvHandler.get("KEYSTORE_PASS"));
             initWindow();
         } catch(Exception e) {
             e.printStackTrace();

@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
@@ -18,8 +17,6 @@ public class MainLayout {
     @FXML private Button iconButton;
     @FXML private TextField emailField;
     @FXML private TextField passwordField;
-    @FXML private Button cancelButton;
-    @FXML private Button saveAccountButton;
 
     private File selectedIconFile;
 
@@ -29,12 +26,17 @@ public class MainLayout {
     }
 
     @FXML
+    public void initialize() {
+        colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
+    }
+
+    @FXML
     public void closeForm() {
         formSubScene.setVisible(false);
         nameField.clear();
         emailField.clear();
         passwordField.clear();
-        colorPicker.setValue(null);
+        colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
         selectedIconFile = null;
         iconButton.setText("Choose Icon");
     }
@@ -60,7 +62,6 @@ public class MainLayout {
         AccountManager.saveAccount(name, colorHex, iconPath, email, password);
         closeForm();
     }
-
 
     @FXML
     public void chooseIcon() {

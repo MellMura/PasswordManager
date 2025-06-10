@@ -27,7 +27,7 @@
 
                            <HBox spacing="20" alignment="CENTER">
                               <TextField fx:id="nameField" promptText="Account Name" HBox.hgrow="ALWAYS" />
-                              <ColorPicker fx:id="colorPicker" />
+                              <ColorPicker fx:id="colorPicker" value="DEEPSKYBLUE"/>
                            </HBox>
 
                            <Button fx:id="iconButton" text="Choose Icon" onAction="#chooseIcon" />
