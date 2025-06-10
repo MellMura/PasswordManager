@@ -29,7 +29,20 @@ public class setUpDB {
                             ")"
             );
 
+            //create saved_accounts table if not exists
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS saved_accounts (" +
+                            "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                            "name VARCHAR(30) NOT NULL UNIQUE, " +
+                            "email VARCHAR(100) NOT NULL, " +
+                            "password VARCHAR(100) NOT NULL," +
+                            "icon_url VARCHAR(60)," +
+                            "color VARCHAR(10)"+
+                            ")"
+            );
+
             System.out.println("Table 'users' ensured.");
+            System.out.println("Table 'saved_accounts' ensured.");
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();

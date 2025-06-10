@@ -28,7 +28,15 @@ public class LoginLayout {
 
             if (success) {
                 System.out.println("Login successful!");
-                // TODO: Load the main application window
+                try {
+                    Parent mainRoot = FXMLLoader.load(getClass().getResource("/layouts/mainLayout.fxml"));
+                    Scene mainScene = new Scene(mainRoot);
+                    Stage stage = (Stage) loginButton.getScene().getWindow();
+                    stage.setScene(mainScene);
+                    stage.setTitle("Password Manager");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 System.out.println("Invalid email or password.");
             }
