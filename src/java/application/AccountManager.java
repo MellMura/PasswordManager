@@ -2,9 +2,13 @@ package application;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountManager {
+
     public static boolean saveAccount(String name, String colorHex, String icon_path, String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 
@@ -46,5 +50,41 @@ public class AccountManager {
             System.out.println("Database connection failed.");
             return false;
         }
+    }
+
+    public List<AccountModel> fetchAccounts() {
+        List<AccountModel> accounts = new ArrayList<>();
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "SELECT name, email, password, icon_url, color FROM saved_accounts";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    try{
+                        String decryptedPassword = EncryptionHandler.decrypt(rs.getString("password"));
+                        accounts.add(new AccountModel(
+                                rs.getString("name"),
+                                rs.getString("email"),
+                                decryptedPassword,
+                                rs.getString("icon_url"),
+                                rs.getString("color")
+                        ));
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Password decryption failed.");
+                    }
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Database connection failed.");
+        }
+
+        return accounts;
     }
 }

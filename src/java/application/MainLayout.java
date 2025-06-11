@@ -1,13 +1,18 @@
 package application;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 public class MainLayout {
     @FXML private SubScene formSubScene;
@@ -17,6 +22,7 @@ public class MainLayout {
     @FXML private Button iconButton;
     @FXML private TextField emailField;
     @FXML private TextField passwordField;
+    @FXML private TilePane tilePane;
 
     private File selectedIconFile;
 
@@ -27,6 +33,8 @@ public class MainLayout {
 
     @FXML
     public void initialize() {
+        List<AccountModel> accounts = new AccountManager().fetchAccounts();
+        renderSavedAccounts(accounts);
         colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
     }
 
@@ -61,6 +69,7 @@ public class MainLayout {
 
         AccountManager.saveAccount(name, colorHex, iconPath, email, password);
         closeForm();
+        initialize();
     }
 
     @FXML
@@ -77,5 +86,24 @@ public class MainLayout {
             iconButton.setText(file.getName());
         }
     }
+
+    public void renderSavedAccounts(List<AccountModel> accounts) {
+        tilePane.getChildren().clear();
+
+        for (AccountModel acc : accounts) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/accountCard.fxml"));
+                AnchorPane card = loader.load();
+
+                AccountCard controller = loader.getController();
+                controller.setData(acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
+
+                tilePane.getChildren().add(card);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }

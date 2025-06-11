@@ -23,8 +23,13 @@ public class EncryptionHandler {
 
     public static void generateAndStoreKey(String keyStoreFile, String storePassword) {
         try {
+            if (Files.exists(Paths.get(keyStoreFile))) {
+                System.out.println("KeyStore already exists. Skipping key generation.");
+                return;
+            }
+
             KeyStore keyStore = KeyStore.getInstance("JCEKS");
-            keyStore.load(null, null); // Create new keystore
+            keyStore.load(null, null);
 
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
             keyGen.init(128);
