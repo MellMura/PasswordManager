@@ -2,13 +2,11 @@ package application;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.File;
@@ -24,7 +22,26 @@ public class AccountCard {
     private ImageView iconImage;
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private StackPane cardWrapper;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private HBox hoverButtons;
 
+
+
+    @FXML
+    public void initialize() {
+        cardWrapper.setOnMouseEntered(e -> {
+            hoverButtons.setVisible(true);
+            hoverButtons.setOpacity(1);
+        });
+        cardWrapper.setOnMouseExited(e -> {
+            hoverButtons.setVisible(false);
+            hoverButtons.setOpacity(0);
+        });
+    }
 
     public void setData(String name, String email, String password, String iconUrl, String colorHex) {
         nameLabel.setText(name);
@@ -45,5 +62,19 @@ public class AccountCard {
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid color: " + colorHex);
         }
+    }
+
+    public void deleteAccount() {
+        String name = nameLabel.getText();
+        boolean success = AccountManager.removeAccount(name);
+        if (success) {
+            Pane parent = (Pane) cardWrapper.getParent();
+            parent.getChildren().remove(cardWrapper);
+        }
+
+    }
+
+    public void editAccount() {
+        //TODO: implement alter database logic
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 
@@ -93,8 +94,7 @@ public class MainLayout {
         for (AccountModel acc : accounts) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/accountCard.fxml"));
-                AnchorPane card = loader.load();
-
+                StackPane card = loader.load();
                 AccountCard controller = loader.getController();
                 controller.setData(acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
 

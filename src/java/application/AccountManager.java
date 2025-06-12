@@ -52,6 +52,28 @@ public class AccountManager {
         }
     }
 
+    public static boolean removeAccount(String name) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "DELETE FROM saved_accounts WHERE name = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, name);
+
+                int rowsDeleted = preparedStatement.executeUpdate();
+
+                return rowsDeleted > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Database connection failed.");
+            return false;
+        }
+    }
+
     public List<AccountModel> fetchAccounts() {
         List<AccountModel> accounts = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
