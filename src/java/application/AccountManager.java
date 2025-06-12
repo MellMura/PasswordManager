@@ -1,11 +1,14 @@
 package application;
 
+import javafx.scene.Node;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AccountManager {
 
@@ -93,14 +96,16 @@ public class AccountManager {
 
         if (connection != null) {
             try {
-                String sql = "SELECT name, email, password, icon_url, color FROM saved_accounts";
+                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? ORDER BY position ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, UserSession.getUserId());
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
                     try{
                         String decryptedPassword = EncryptionHandler.decrypt(rs.getString("password"));
                         accounts.add(new AccountModel(
+                                rs.getInt("id"),
                                 rs.getString("name"),
                                 rs.getString("email"),
                                 decryptedPassword,
@@ -121,5 +126,38 @@ public class AccountManager {
         }
 
         return accounts;
+    }
+
+    public static void reorderPositions(int fromPosition, int toPosition, int draggedId) {
+        try (Connection conn = JDBC_Handler.connectDB()) {
+            conn.setAutoCommit(false);
+
+            if (fromPosition < toPosition) {
+                PreparedStatement shiftUp = conn.prepareStatement(
+                        "UPDATE saved_accounts SET position = position - 1 WHERE position > ? AND position <= ?"
+                );
+                shiftUp.setInt(1, fromPosition);
+                shiftUp.setInt(2, toPosition);
+                shiftUp.executeUpdate();
+            } else if (fromPosition > toPosition) {
+                PreparedStatement shiftDown = conn.prepareStatement(
+                        "UPDATE saved_accounts SET position = position + 1 WHERE position >= ? AND position < ?"
+                );
+                shiftDown.setInt(1, toPosition);
+                shiftDown.setInt(2, fromPosition);
+                shiftDown.executeUpdate();
+            }
+
+            PreparedStatement updateDragged = conn.prepareStatement(
+                    "UPDATE saved_accounts SET position = ? WHERE id = ?"
+            );
+            updateDragged.setInt(1, toPosition);
+            updateDragged.setInt(2, draggedId);
+            updateDragged.executeUpdate();
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

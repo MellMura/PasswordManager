@@ -2,6 +2,8 @@ package application;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -13,9 +15,13 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
-public class MainLayout {
+public class MainLayout implements Initializable {
     @FXML private SubScene formSubScene;
 
     @FXML private TextField nameField;
@@ -27,13 +33,20 @@ public class MainLayout {
 
     private File selectedIconFile;
 
+    private final Map<Node, AccountCard> controllerMap = new HashMap<>();
+
+
     @FXML
     public void addAccount() {
         formSubScene.setVisible(true);
     }
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        loadInitialData();
+    }
+
+    public void loadInitialData() {
         List<AccountModel> accounts = new AccountManager().fetchAccounts();
         renderSavedAccounts(accounts);
         colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
@@ -70,7 +83,7 @@ public class MainLayout {
 
         AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password);
         closeForm();
-        initialize();
+        loadInitialData();
     }
 
     @FXML
@@ -90,6 +103,7 @@ public class MainLayout {
 
     public void renderSavedAccounts(List<AccountModel> accounts) {
         tilePane.getChildren().clear();
+        controllerMap.clear();
 
         for (AccountModel acc : accounts) {
             try {
@@ -97,7 +111,9 @@ public class MainLayout {
                 StackPane card = loader.load();
                 AccountCard controller = loader.getController();
                 controller.setData(acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
-
+                controller.setMainLayout(this);
+                controllerMap.put(card, controller);
+                card.setUserData(acc.id);
                 tilePane.getChildren().add(card);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,5 +121,15 @@ public class MainLayout {
         }
     }
 
+    public void handleDrop(Node draggedNode, Node targetNode) {
+        if (draggedNode == null || targetNode == null || draggedNode == targetNode) return;
 
+        List<Node> nodes = new java.util.ArrayList<>(tilePane.getChildren());
+        nodes.remove(draggedNode);
+
+        int insertIndex = nodes.indexOf(targetNode);
+        nodes.add(insertIndex, draggedNode);
+
+        tilePane.getChildren().setAll(nodes);
+    }
 }

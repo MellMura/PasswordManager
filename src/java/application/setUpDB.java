@@ -40,7 +40,7 @@ public class setUpDB {
                             "password VARCHAR(100) NOT NULL, " +
                             "icon_url VARCHAR(60), " +
                             "color VARCHAR(10), " +
-                            "position INT NOT NULL UNIQUE" +
+                            "position INT NOT NULL" +
                             ")"
             );
 
