@@ -1,5 +1,6 @@
 package application;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,9 +22,11 @@ public class RegLayout {
     @FXML private TextField passwordCheckField;
     @FXML private Button createAccountButton;
     @FXML private Hyperlink switchToLoginLink;
+    @FXML private AnchorPane rootPane;
 
     @FXML
     public void initialize() {
+        Platform.runLater(() -> rootPane.requestFocus());
         createAccountButton.setOnAction(event -> {
             String username = usernameField.getText().trim();
             String email = emailField.getText().trim();
