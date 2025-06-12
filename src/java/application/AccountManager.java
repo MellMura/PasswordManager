@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AccountManager {
 
-    public static boolean saveAccount(String name, String colorHex, String icon_path, String email, String password) {
+    public static boolean saveAccount(int userId, String name, String colorHex, String iconPath, String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -23,15 +23,28 @@ public class AccountManager {
                     return false;
                 }
 
-                String sql = "INSERT INTO saved_accounts (name, email, password, icon_url, color) VALUES (?, ?, ?, ?, ?)";
+                String posQuery = "SELECT MAX(position) AS max_pos FROM saved_accounts WHERE user_id = ?";
+                PreparedStatement posStatement = connection.prepareStatement(posQuery);
+                posStatement.setInt(1, userId);
+                ResultSet rs = posStatement.executeQuery();
+
+                int nextPosition = 1;
+                if (rs.next()) {
+                    nextPosition = rs.getInt("max_pos") + 1;
+                }
+
+                String sql = "INSERT INTO saved_accounts (user_id, folder_id, name, email, password, icon_url, color, position) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, email);
-                preparedStatement.setString(3, encryptedPassword);
-                preparedStatement.setString(4, icon_path);
-                preparedStatement.setString(5, colorHex);
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, 0); // default folder
+                preparedStatement.setString(3, name);
+                preparedStatement.setString(4, email);
+                preparedStatement.setString(5, encryptedPassword);
+                preparedStatement.setString(6, iconPath);
+                preparedStatement.setString(7, colorHex);
+                preparedStatement.setInt(8, nextPosition);
 
                 int rowsInserted = preparedStatement.executeUpdate();
 

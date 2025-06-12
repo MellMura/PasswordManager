@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class LoginLayout {
     @FXML private TextField emailField;
@@ -20,6 +21,9 @@ public class LoginLayout {
 
     @FXML
     public void initialize() {
+        String lastEmail = SessionHandler.loadEmail();
+        emailField.setText(lastEmail);
+
         loginButton.setOnAction(event -> {
             String email = emailField.getText().trim();
             String password = passwordField.getText().trim();
@@ -29,10 +33,15 @@ public class LoginLayout {
                 return;
             }
 
-            boolean success = Login.loginUser(email, password);
+            Integer userId = Login.loginUser(email, password);
 
-            if (success) {
+            if (userId != null) {
                 System.out.println("Login successful!");
+                SessionHandler.saveEmail(email);
+                String token = SessionHandler.generateToken();
+                SessionHandler.saveSession(userId, email, token);
+                UserSession.setCurrentUserId(userId);
+
                 try {
                     Parent mainRoot = FXMLLoader.load(getClass().getResource("/layouts/mainLayout.fxml"));
                     Scene mainScene = new Scene(mainRoot);

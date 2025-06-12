@@ -5,14 +5,14 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 
 public class Login {
-    public static boolean loginUser(String email, String password) {
+    public static Integer loginUser(String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
             try {
                 String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-                String sql = "SELECT password FROM users WHERE email = ?";
+                String sql = "SELECT id, password FROM users WHERE email = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, email);
 
@@ -20,18 +20,18 @@ public class Login {
 
                 if (rs.next()) {
                     String storedHash = rs.getString("password");
-                    return BCrypt.checkpw(password, storedHash);
+                    if (BCrypt.checkpw(password, storedHash)) {
+                        return rs.getInt("id");
+                    }
                 } else {
                     System.out.println("User not found.");
-                    return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
         } else {
             System.out.println("Database connection failed.");
-            return false;
         }
+        return null;
     }
 }

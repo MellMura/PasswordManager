@@ -68,7 +68,7 @@ public class MainLayout {
             return;
         }
 
-        AccountManager.saveAccount(name, colorHex, iconPath, email, password);
+        AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password);
         closeForm();
         initialize();
     }

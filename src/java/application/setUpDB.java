@@ -33,16 +33,28 @@ public class setUpDB {
             statement.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS saved_accounts (" +
                             "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                            "user_id INT NOT NULL, " +
+                            "folder_id INT, " +
                             "name VARCHAR(30) NOT NULL UNIQUE, " +
                             "email VARCHAR(100) NOT NULL, " +
-                            "password VARCHAR(100) NOT NULL," +
-                            "icon_url VARCHAR(60)," +
-                            "color VARCHAR(10)"+
+                            "password VARCHAR(100) NOT NULL, " +
+                            "icon_url VARCHAR(60), " +
+                            "color VARCHAR(10), " +
+                            "position INT NOT NULL UNIQUE" +
+                            ")"
+            );
+
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS session_tokens (" +
+                            "user_id INT NOT NULL, " +
+                            "token VARCHAR(100) NOT NULL UNIQUE, " +
+                            "expires_at DATETIME NOT NULL " +
                             ")"
             );
 
             System.out.println("Table 'users' ensured.");
             System.out.println("Table 'saved_accounts' ensured.");
+            System.out.println("Table 'session_tokens' ensured.");
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
