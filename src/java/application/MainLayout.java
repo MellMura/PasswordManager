@@ -30,14 +30,36 @@ public class MainLayout implements Initializable {
     @FXML private TextField emailField;
     @FXML private TextField passwordField;
     @FXML private TilePane tilePane;
+    @FXML private Button saveAccountButton;
 
     private File selectedIconFile;
+    private Integer editingAccountId = null;
 
     private final Map<Node, AccountCard> controllerMap = new HashMap<>();
 
 
     @FXML
     public void addAccount() {
+        formSubScene.setVisible(true);
+    }
+
+    @FXML
+    public void editAccount(AccountModel account) {
+        saveAccountButton.setText("Update");
+        nameField.setText(account.name);
+        emailField.setText(account.email);
+        passwordField.setText(account.password);
+        colorPicker.setValue(javafx.scene.paint.Color.web(account.color));
+
+
+        if (account.iconUrl != null) {
+            File file = new File(account.iconUrl);
+            if (file.exists()) {
+                selectedIconFile = file;
+                iconButton.setText(file.getName());
+            }
+        }
+        editingAccountId = account.id;
         formSubScene.setVisible(true);
     }
 
@@ -61,6 +83,8 @@ public class MainLayout implements Initializable {
         colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
         selectedIconFile = null;
         iconButton.setText("Choose Icon");
+        editingAccountId = null;
+        saveAccountButton.setText("Add");
     }
 
     @FXML
@@ -81,7 +105,12 @@ public class MainLayout implements Initializable {
             return;
         }
 
-        AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password);
+        if (editingAccountId != null) {
+            AccountManager.updateAccount(editingAccountId, name, colorHex, iconPath, email, password);
+        } else {
+            AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password);
+        }
+
         closeForm();
         loadInitialData();
     }
@@ -110,26 +139,14 @@ public class MainLayout implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/accountCard.fxml"));
                 StackPane card = loader.load();
                 AccountCard controller = loader.getController();
-                controller.setData(acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
                 controller.setMainLayout(this);
                 controllerMap.put(card, controller);
                 card.setUserData(acc.id);
+                controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
                 tilePane.getChildren().add(card);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void handleDrop(Node draggedNode, Node targetNode) {
-        if (draggedNode == null || targetNode == null || draggedNode == targetNode) return;
-
-        List<Node> nodes = new java.util.ArrayList<>(tilePane.getChildren());
-        nodes.remove(draggedNode);
-
-        int insertIndex = nodes.indexOf(targetNode);
-        nodes.add(insertIndex, draggedNode);
-
-        tilePane.getChildren().setAll(nodes);
     }
 }

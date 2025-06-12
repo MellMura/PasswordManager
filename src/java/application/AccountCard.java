@@ -37,6 +37,8 @@ public class AccountCard {
     private HBox hoverButtons;
     private MainLayout mainLayout;
 
+    private AccountModel currentModel;
+
     public void setMainLayout(MainLayout layout) {
         this.mainLayout = layout;
     }
@@ -104,7 +106,9 @@ public class AccountCard {
         });
     }
 
-    public void setData(String name, String email, String password, String iconUrl, String colorHex) {
+    public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
+        currentModel = new AccountModel(id, name, email, password, iconUrl, colorHex);
+
         nameLabel.setText(name);
         emailLabel.setText("E-mail: " + email);
         passwordLabel.setText("Password: " + password);
@@ -125,6 +129,8 @@ public class AccountCard {
         }
     }
 
+
+
     public void deleteAccount() {
         String name = nameLabel.getText();
         boolean success = AccountManager.removeAccount(name);
@@ -135,7 +141,21 @@ public class AccountCard {
 
     }
 
+    @FXML
     public void editAccount() {
-        //TODO: implement alter database logic
+        AccountModel acc = new AccountModel();
+        acc.id = (Integer) cardWrapper.getUserData(); // or pass as field if you store it in setData
+        acc.name = nameLabel.getText();
+        acc.email = emailLabel.getText().replace("E-mail: ", "");
+        acc.password = passwordLabel.getText().replace("Password: ", "");
+        Background bg = rootPane.getBackground();
+        if (bg != null && !bg.getFills().isEmpty()) {
+            acc.color = bg.getFills().get(0).getFill().toString();
+        } else {
+            acc.color = "#00bfff";
+        }
+        acc.iconUrl = iconImage.getImage() != null ? iconImage.getImage().getUrl().replace("file:/", "") : null;
+
+        mainLayout.editAccount(acc);
     }
 }

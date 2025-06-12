@@ -1,14 +1,11 @@
 package application;
 
-import javafx.scene.Node;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AccountManager {
 
@@ -80,6 +77,41 @@ public class AccountManager {
                 int rowsDeleted = preparedStatement.executeUpdate();
 
                 return rowsDeleted > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Database connection failed.");
+            return false;
+        }
+    }
+
+    public static boolean updateAccount(int id, String name, String colorHex, String iconPath, String email, String password) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String encryptedPassword;
+                try {
+                    encryptedPassword = EncryptionHandler.encrypt(password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Password encryption failed.");
+                    return false;
+                }
+                String sql = "UPDATE saved_accounts SET name = ?, email = ?, password = ?, icon_url = ?, color = ? WHERE id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, encryptedPassword);
+                preparedStatement.setString(4, iconPath);
+                preparedStatement.setString(5, colorHex);
+                preparedStatement.setInt(6, id);
+
+                int rowsUpdated = preparedStatement.executeUpdate();
+
+                return rowsUpdated > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
