@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,11 +71,27 @@ public class AccountManager {
 
         if (connection != null) {
             try {
-                String sql = "DELETE FROM saved_accounts WHERE name = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, name);
+                String selectSql = "SELECT icon_url FROM saved_accounts WHERE name = ?";
+                PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+                selectStatement.setString(1, name);
+                ResultSet rs = selectStatement.executeQuery();
 
-                int rowsDeleted = preparedStatement.executeUpdate();
+                String iconPath = null;
+                if (rs.next()) {
+                    iconPath = rs.getString("icon_url");
+                }
+
+                String deleteSql = "DELETE FROM saved_accounts WHERE name = ?";
+                PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+                deleteStatement.setString(1, name);
+                int rowsDeleted = deleteStatement.executeUpdate();
+
+                if (rowsDeleted > 0 && iconPath != null && !iconPath.isEmpty()) {
+                    File iconFile = new File(iconPath);
+                    if (iconFile.exists()) {
+                        iconFile.delete();
+                    }
+                }
 
                 return rowsDeleted > 0;
             } catch (SQLException e) {
