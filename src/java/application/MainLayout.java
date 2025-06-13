@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -31,6 +32,7 @@ public class MainLayout implements Initializable {
     @FXML private TextField passwordField;
     @FXML private TilePane tilePane;
     @FXML private Button saveAccountButton;
+    @FXML private Label usernameLabel;
 
     private File selectedIconFile;
     private Integer editingAccountId = null;
@@ -66,6 +68,16 @@ public class MainLayout implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadInitialData();
+        javafx.application.Platform.runLater(() -> {
+            String css = getClass().getResource("/styles/main.css").toExternalForm();
+            tilePane.getScene().getStylesheets().add(css);
+        });
+        String username = UserSession.getUsername();
+        if (username.endsWith("s")) {
+            usernameLabel.setText(username + "' passwords");
+        } else {
+            usernameLabel.setText(username + "'s passwords");
+        }
     }
 
     public void loadInitialData() {

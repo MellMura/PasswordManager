@@ -12,7 +12,7 @@ public class Login {
             try {
                 String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-                String sql = "SELECT id, password FROM users WHERE email = ?";
+                String sql = "SELECT id, username, password FROM users WHERE email = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, email);
 
@@ -20,6 +20,7 @@ public class Login {
 
                 if (rs.next()) {
                     String storedHash = rs.getString("password");
+                    UserSession.setUsername(rs.getString("username"));
                     if (BCrypt.checkpw(password, storedHash)) {
                         return rs.getInt("id");
                     }

@@ -51,6 +51,7 @@ public class LoginLayout {
                     Scene mainScene = new Scene(mainRoot);
                     Stage stage = (Stage) loginButton.getScene().getWindow();
                     stage.setScene(mainScene);
+                    stage.setMaximized(true);
                     stage.setTitle("Password Manager");
                 } catch (IOException e) {
                     e.printStackTrace();

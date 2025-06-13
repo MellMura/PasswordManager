@@ -44,6 +44,7 @@ public class Main extends Application {
 
             Scene scene = new Scene(root, 600, 400);
             Stage stage = new Stage(StageStyle.DECORATED);
+            //stage.setMaximized(true);
             stage.setTitle(WINDOW_TITLE);
             stage.setScene(scene);
             stage.show();

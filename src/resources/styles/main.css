@@ -1,0 +1,41 @@
+#header {
+    -fx-background-color: #01bfa9;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+}
+
+#usernameLabel {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+#mainWrapper {
+    -fx-padding: 10px;
+    -fx-background-color: #01bfa9;
+}
+
+#tilePane {
+    -fx-background-color: white;
+    -fx-background-radius: 10px 10px 0 0;
+}
+#footer {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 10px 10px;
+    -fx-padding: 5px;
+    -fx-min-height: 70px;
+}
+
+#addAccountButton {
+    -fx-background-color: #173297;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30px;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
+    -fx-border-color: transparent;
+}
+
