@@ -9,17 +9,18 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.StackPane?>
-<StackPane fx:id="cardWrapper" maxWidth="250"
+<StackPane fx:id="cardWrapper" maxWidth="318"
            xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="application.AccountCard">
-   <AnchorPane fx:id="rootPane" prefHeight="170.0" prefWidth="183.0">
+   <AnchorPane fx:id="rootPane" prefHeight="280.0" prefWidth="280.0">
       <children>
-         <VBox alignment="TOP_CENTER" prefHeight="186.0" prefWidth="183.0" style="-fx-padding: 10;">
+         <VBox alignment="TOP_CENTER" prefHeight="280.0" prefWidth="280.0">
             <children>
-               <HBox prefHeight="40.0" prefWidth="186.0">
-                  <children>
-                     <Label fx:id="nameLabel" text="[NAME]">
+               <HBox fx:id="cardHeader" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" prefWidth="280.0">
+
+               <children>
+                     <Label fx:id="nameLabel" text="[NAME]" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                         <font>
                            <Font name="Lucida Sans Typewriter Bold" size="12.0" />
                         </font>
@@ -27,12 +28,12 @@
                   </children>
                </HBox>
                <ImageView fx:id="iconImage" fitHeight="57.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
-               <Label fx:id="emailLabel" prefHeight="38.0" prefWidth="180.0" style="-fx-padding: 10 0;" text="E-mail:">
+               <Label fx:id="emailLabel" prefHeight="38.0" prefWidth="280.0" style="-fx-padding: 10 0;" text="E-mail:">
                   <font>
                      <Font name="SimSun" size="12.0" />
                   </font>
                </Label>
-               <Label fx:id="passwordLabel" prefHeight="32.0" prefWidth="162.0" text="Password:">
+               <Label fx:id="passwordLabel" prefHeight="38.0" prefWidth="280.0" text="Password:">
                   <font>
                      <Font name="SimSun" size="12.0" />
                   </font>
@@ -42,10 +43,14 @@
       </children>
    </AnchorPane>
 
-      <HBox alignment="TOP_CENTER" fx:id="hoverButtons"
-            visible="false" opacity="0"
-            spacing="5" layoutX="170" layoutY="-10">
-         <Button fx:id="editButton" onAction="#editAccount" text="✏" />
-         <Button fx:id="deleteButton" onAction="#deleteAccount" text="🗑" />
-      </HBox>
+   <VBox fx:id="hoverButtons"
+         visible="false" opacity="0"
+         spacing="5"
+         alignment="TOP_LEFT"
+         translateY="10"
+         translateX="286"
+         pickOnBounds="false">
+      <Button fx:id="editButton" onAction="#editAccount" text="✏" prefHeight="38.0" prefWidth="38.0"/>
+      <Button fx:id="deleteButton" onAction="#deleteAccount" text="🗑" prefHeight="38.0" prefWidth="38.0"/>
+   </VBox>
 </StackPane>

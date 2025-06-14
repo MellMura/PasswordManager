@@ -34,10 +34,39 @@ public class AccountCard {
     @FXML
     private Button deleteButton;
     @FXML
-    private HBox hoverButtons;
+    private Button editButton;
+    @FXML
+    private VBox hoverButtons;
+    @FXML
+    private HBox cardHeader;
     private MainLayout mainLayout;
 
     private AccountModel currentModel;
+
+
+    private Color saturateColor(Color color, double factor) {
+        float[] hsb = java.awt.Color.RGBtoHSB(
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255),
+                null
+        );
+
+        // Increase saturation: clamp to 1.0 max
+        hsb[1] = Math.min(1.0f, hsb[1] * (float) factor);
+
+        int rgb = java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+
+        return Color.rgb(r, g, b, color.getOpacity());
+    }
+
+    private boolean isDark(Color color) {
+        double luminance = 0.2126 * color.getRed() + 0.7152 * color.getGreen() + 0.0722 * color.getBlue();
+        return luminance < 0.5;
+    }
 
     public void setMainLayout(MainLayout layout) {
         this.mainLayout = layout;
@@ -121,9 +150,27 @@ public class AccountCard {
             }
         }
 
-        try {
-            Color color = Color.web(colorHex);
-            rootPane.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+        try {Color baseColor = Color.web(colorHex);
+            Color saturatedColor = saturateColor(baseColor, 1.6);
+            Color textColor = isDark(saturatedColor) ? Color.WHITE : Color.BLACK;
+            rootPane.setBackground(new Background(
+                    new BackgroundFill(baseColor, new CornerRadii(10), Insets.EMPTY)
+            ));
+            cardHeader.setBackground(new Background(
+                    new BackgroundFill(saturatedColor, new CornerRadii(10), Insets.EMPTY)
+            ));
+            deleteButton.setBackground(new Background(
+                    new BackgroundFill(saturatedColor, new CornerRadii(5), Insets.EMPTY)
+            ));
+            editButton.setBackground(new Background(
+                    new BackgroundFill(saturatedColor, new CornerRadii(5), Insets.EMPTY)
+            ));
+            nameLabel.setTextFill(textColor);
+            emailLabel.setTextFill(textColor);
+            passwordLabel.setTextFill(textColor);
+            deleteButton.setTextFill(textColor);
+            editButton.setTextFill(textColor);
+
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid color: " + colorHex);
         }
@@ -144,7 +191,7 @@ public class AccountCard {
     @FXML
     public void editAccount() {
         AccountModel acc = new AccountModel();
-        acc.id = (Integer) cardWrapper.getUserData(); // or pass as field if you store it in setData
+        acc.id = (Integer) cardWrapper.getUserData();
         acc.name = nameLabel.getText();
         acc.email = emailLabel.getText().replace("E-mail: ", "");
         acc.password = passwordLabel.getText().replace("Password: ", "");

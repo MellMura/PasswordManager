@@ -78,6 +78,7 @@ public class MainLayout implements Initializable {
         } else {
             usernameLabel.setText(username + "'s passwords");
         }
+
     }
 
     public void loadInitialData() {
@@ -154,6 +155,7 @@ public class MainLayout implements Initializable {
                 controller.setMainLayout(this);
                 controllerMap.put(card, controller);
                 card.setUserData(acc.id);
+                card.getStyleClass().add("account-card");
                 controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
                 tilePane.getChildren().add(card);
             } catch (IOException e) {
