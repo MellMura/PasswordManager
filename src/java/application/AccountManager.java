@@ -117,6 +117,16 @@ public class AccountManager {
                     System.out.println("Password encryption failed.");
                     return false;
                 }
+                String selectSql = "SELECT icon_url FROM saved_accounts WHERE name = ?";
+                PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+                selectStatement.setString(1, name);
+                ResultSet rs = selectStatement.executeQuery();
+
+                String icon = null;
+                if (rs.next()) {
+                    icon = rs.getString("icon_url");
+                }
+
                 String sql = "UPDATE saved_accounts SET name = ?, email = ?, password = ?, icon_url = ?, color = ? WHERE id = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, name);
@@ -127,8 +137,13 @@ public class AccountManager {
                 preparedStatement.setInt(6, id);
 
                 int rowsUpdated = preparedStatement.executeUpdate();
-
-                return rowsUpdated > 0;
+                if (rowsUpdated > 0 && icon != null && !icon.isEmpty()) {
+                    File oldIcon = new File(icon);
+                    if (oldIcon.exists()) {
+                        oldIcon.delete();
+                    }
+                }
+                return true;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
