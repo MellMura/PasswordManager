@@ -197,7 +197,8 @@ public class AccountCard {
 
     public void togglePasswordVisibility() {
         isPasswordVisible = !isPasswordVisible;
-        passwordValue.setText(isPasswordVisible ? originalPassword : "•".repeat(originalPassword.length()));
+        String password = currentModel != null ? currentModel.password : "";
+        passwordValue.setText(isPasswordVisible ? password : "•".repeat(password.length()));
     }
 
     public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
@@ -333,7 +334,7 @@ public class AccountCard {
         acc.id = (Integer) cardWrapper.getUserData();
         acc.name = nameLabel.getText();
         acc.email = emailValue.getText().replace("E-mail: ", "");
-        acc.password = passwordValue.getText().replace("Password: ", "");
+        acc.password = currentModel.password;
         Background bg = rootPane.getBackground();
         if (bg != null && !bg.getFills().isEmpty()) {
             acc.color = bg.getFills().get(0).getFill().toString();
