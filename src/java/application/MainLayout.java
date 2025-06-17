@@ -10,6 +10,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
@@ -33,12 +34,17 @@ public class MainLayout implements Initializable {
     @FXML private TilePane tilePane;
     @FXML private Button saveAccountButton;
     @FXML private Label usernameLabel;
+    @FXML private Pane hoverOverlay;
+    @FXML private StackPane stack;
 
     private File selectedIconFile;
     private Integer editingAccountId = null;
 
     private final Map<Node, AccountCard> controllerMap = new HashMap<>();
 
+    public Pane getHoverLayer() {
+        return hoverOverlay;
+    }
 
     @FXML
     public void addAccount() {
@@ -72,6 +78,7 @@ public class MainLayout implements Initializable {
             String css = getClass().getResource("/styles/main.css").toExternalForm();
             tilePane.getScene().getStylesheets().add(css);
         });
+
         String username = UserSession.getUsername();
         if (username.endsWith("s")) {
             usernameLabel.setText(username + "' passwords");
@@ -157,7 +164,9 @@ public class MainLayout implements Initializable {
                 card.setUserData(acc.id);
                 card.getStyleClass().add("account-card");
                 controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
-                tilePane.getChildren().add(card);
+                StackPane cardWrapper = new StackPane();
+                cardWrapper.getChildren().add(card); // this is your AccountCard loaded from FXML
+                tilePane.getChildren().add(cardWrapper);
             } catch (IOException e) {
                 e.printStackTrace();
             }

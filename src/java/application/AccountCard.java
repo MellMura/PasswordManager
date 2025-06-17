@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,60 +33,20 @@ public class AccountCard {
     @FXML
     private StackPane cardWrapper;
     @FXML
-    private Button deleteButton;
-    @FXML
-    private Button editButton;
-    @FXML
-    private VBox hoverButtons;
-    @FXML
     private HBox cardHeader;
+
+    private VBox hoverButtons;
+    private Button editButton;
+    private Button deleteButton;
     private MainLayout mainLayout;
 
     private AccountModel currentModel;
 
 
-    private Color saturateColor(Color color, double factor) {
-        float[] hsb = java.awt.Color.RGBtoHSB(
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255),
-                null
-        );
-
-        // Increase saturation: clamp to 1.0 max
-        hsb[1] = Math.min(1.0f, hsb[1] * (float) factor);
-
-        int rgb = java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
-        int r = (rgb >> 16) & 0xFF;
-        int g = (rgb >> 8) & 0xFF;
-        int b = rgb & 0xFF;
-
-        return Color.rgb(r, g, b, color.getOpacity());
-    }
-
-    private boolean isDark(Color color) {
-        double luminance = 0.2126 * color.getRed() + 0.7152 * color.getGreen() + 0.0722 * color.getBlue();
-        return luminance < 0.5;
-    }
-
-    public void setMainLayout(MainLayout layout) {
-        this.mainLayout = layout;
-    }
-
-    public String getName() {
-        return nameLabel.getText();
-    }
-
     @FXML
     public void initialize() {
-        cardWrapper.setOnMouseEntered(e -> {
-            hoverButtons.setVisible(true);
-            hoverButtons.setOpacity(1);
-        });
-        cardWrapper.setOnMouseExited(e -> {
-            hoverButtons.setVisible(false);
-            hoverButtons.setOpacity(0);
-        });
+        cardWrapper.setOnMouseEntered(e -> showHoverButtons());
+        cardWrapper.setOnMouseExited(e -> hideHoverButtons());
 
         cardWrapper.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -135,8 +96,118 @@ public class AccountCard {
         });
     }
 
+    private Color saturateColor(Color color, double factor) {
+        float[] hsb = java.awt.Color.RGBtoHSB(
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255),
+                null
+        );
+
+        // Increase saturation: clamp to 1.0 max
+        hsb[1] = Math.min(1.0f, hsb[1] * (float) factor);
+
+        int rgb = java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+
+        return Color.rgb(r, g, b, color.getOpacity());
+    }
+
+    private boolean isDark(Color color) {
+        double luminance = 0.2126 * color.getRed() + 0.7152 * color.getGreen() + 0.0722 * color.getBlue();
+        return luminance < 0.5;
+    }
+
+    public void setMainLayout(MainLayout layout) {
+        this.mainLayout = layout;
+    }
+
+    public String getName() {
+        return nameLabel.getText();
+    }
+
+    @FXML
+    private void handleMouseEntered() {
+        if (hoverButtons != null) {
+            if (!mainLayout.getHoverLayer().getChildren().contains(hoverButtons)) {
+                mainLayout.getHoverLayer().getChildren().add(hoverButtons);
+            }
+
+            // Translate scene position to layout coordinates
+            double sceneX = cardWrapper.localToScene(0, 0).getX();
+            double sceneY = cardWrapper.localToScene(0, 0).getY();
+            double layoutX = sceneX - mainLayout.getHoverLayer().localToScene(0, 0).getX() + cardWrapper.getWidth() - 10;
+            double layoutY = sceneY - mainLayout.getHoverLayer().localToScene(0, 0).getY() + 10;
+
+            hoverButtons.setLayoutX(layoutX);
+            hoverButtons.setLayoutY(layoutY);
+            hoverButtons.setVisible(true);
+            hoverButtons.setOpacity(1.0);
+            hoverButtons.getStyleClass().add("hover-buttons");
+        }
+    }
+
+    @FXML
+    private void handleMouseExited() {
+        if (hoverButtons != null) {
+            hoverButtons.setVisible(false);
+            hoverButtons.setOpacity(0.0);
+        }
+    }
+
+
+    private void showHoverButtons() {
+        if (hoverButtons != null) {
+            if (!mainLayout.getHoverLayer().getChildren().contains(hoverButtons)) {
+                mainLayout.getHoverLayer().getChildren().add(hoverButtons);
+            }
+
+            // Position the buttons outside top-right
+            double sceneX = cardWrapper.localToScene(0, 0).getX();
+            double sceneY = cardWrapper.localToScene(0, 0).getY();
+            double offsetX = sceneX - mainLayout.getHoverLayer().localToScene(0, 0).getX() + cardWrapper.getWidth() + 5;
+            double offsetY = sceneY - mainLayout.getHoverLayer().localToScene(0, 0).getY();
+
+            hoverButtons.setLayoutX(offsetX);
+            hoverButtons.setLayoutY(offsetY);
+            hoverButtons.setVisible(true);
+            hoverButtons.setOpacity(1);
+        }
+    }
+
+    private void hideHoverButtons() {
+        if (hoverButtons != null) {
+            hoverButtons.setVisible(false);
+            hoverButtons.setOpacity(0);
+        }
+    }
+
     public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
         currentModel = new AccountModel(id, name, email, password, iconUrl, colorHex);
+        hoverButtons = new VBox(5);
+        hoverButtons.setVisible(false);
+        hoverButtons.setOpacity(0);
+
+        Button editBtn = new Button("✏");
+        editBtn.setPrefSize(38, 38);
+        editBtn.setOnAction(e -> editAccount());
+
+        Button deleteBtn = new Button("🗑");
+        deleteBtn.setPrefSize(38, 38);
+        deleteBtn.setOnAction(e -> deleteAccount());
+        editBtn.getStyleClass().add("hover-button");
+        deleteBtn.getStyleClass().add("hover-button");
+        this.editButton = editBtn;
+        this.deleteButton = deleteBtn;
+
+        hoverButtons.getChildren().addAll(editBtn, deleteBtn);
+        hoverButtons.setOnMouseEntered(e -> showHoverButtons());
+        hoverButtons.setOnMouseExited(e -> hideHoverButtons());
+        if (!mainLayout.getHoverLayer().getChildren().contains(hoverButtons)) {
+            mainLayout.getHoverLayer().getChildren().add(hoverButtons);
+        }
 
         nameLabel.setText(name);
         emailLabel.setText("E-mail: " + email);
@@ -153,6 +224,26 @@ public class AccountCard {
         try {Color baseColor = Color.web(colorHex);
             Color saturatedColor = saturateColor(baseColor, 1.6);
             Color textColor = isDark(saturatedColor) ? Color.WHITE : Color.BLACK;
+            Color finalSaturatedColor = saturatedColor;
+            editBtn.setOnMouseEntered(e -> {
+                Color hoverColor = isDark(finalSaturatedColor)
+                        ? finalSaturatedColor.brighter()
+                        : saturateColor(finalSaturatedColor, 1.4);
+                editBtn.setBackground(new Background(new BackgroundFill(hoverColor, new CornerRadii(5), Insets.EMPTY)));
+            });
+            editBtn.setOnMouseExited(e -> {
+                editBtn.setBackground(new Background(new BackgroundFill(finalSaturatedColor, new CornerRadii(5), Insets.EMPTY)));
+            });
+
+            deleteBtn.setOnMouseEntered(e -> {
+                Color hoverColor = isDark(finalSaturatedColor)
+                        ? finalSaturatedColor.brighter()
+                        : saturateColor(finalSaturatedColor, 1.4);
+                deleteBtn.setBackground(new Background(new BackgroundFill(hoverColor, new CornerRadii(5), Insets.EMPTY)));
+            });
+            deleteBtn.setOnMouseExited(e -> {
+                deleteBtn.setBackground(new Background(new BackgroundFill(finalSaturatedColor, new CornerRadii(5), Insets.EMPTY)));
+            });
             rootPane.setBackground(new Background(
                     new BackgroundFill(baseColor, new CornerRadii(10), Insets.EMPTY)
             ));

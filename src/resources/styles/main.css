@@ -53,6 +53,7 @@
     -fx-font-weight: bold;
 }
 
-#hoverButtons {
-    -fx-z-order: 1;
+.hover-buttons {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
 }
