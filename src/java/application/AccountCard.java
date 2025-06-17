@@ -52,15 +52,13 @@ public class AccountCard {
         cardWrapper.setOnMouseEntered(e -> showHoverButtons());
         cardWrapper.setOnMouseExited(e -> hideHoverButtons());
 
-        cardWrapper.setOnDragDetected(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                Dragboard db = cardWrapper.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putString("drag");
-                db.setContent(content);
-                db.setDragView(cardWrapper.snapshot(null, null));
-                event.consume();
-            }
+        cardWrapper.setOnDragDetected(event -> {
+            Dragboard db = cardWrapper.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(currentModel.id + "");
+            db.setContent(content);
+            db.setDragView(cardWrapper.snapshot(null, null));
+            event.consume();
         });
 
         cardWrapper.setOnDragOver(event -> {
@@ -77,17 +75,28 @@ public class AccountCard {
             if (db.hasString()) {
                 Node draggedNode = (Node) event.getGestureSource();
 
-                TilePane parent = (TilePane) cardWrapper.getParent();
+                Node draggedWrapper = draggedNode;
+                Node targetWrapper = cardWrapper;
+
+                // Traverse up to the outer StackPane wrapper
+                while (!(draggedWrapper.getParent() instanceof TilePane)) {
+                    draggedWrapper = draggedWrapper.getParent();
+                }
+                while (!(targetWrapper.getParent() instanceof TilePane)) {
+                    targetWrapper = targetWrapper.getParent();
+                }
+
+                TilePane parent = (TilePane) targetWrapper.getParent();
                 ObservableList<Node> children = parent.getChildren();
 
-                int fromIndex = children.indexOf(draggedNode);
-                int toIndex = children.indexOf(cardWrapper);
+                int fromIndex = children.indexOf(draggedWrapper);
+                int toIndex = children.indexOf(targetWrapper);
 
                 if (fromIndex != -1 && toIndex != -1 && fromIndex != toIndex) {
                     children.remove(fromIndex);
-                    children.add(toIndex, draggedNode);
+                    children.add(toIndex, draggedWrapper);
 
-                    Integer draggedId = (Integer) draggedNode.getUserData();
+                    int draggedId = Integer.parseInt(db.getString());
                     AccountManager.reorderPositions(fromIndex + 1, toIndex + 1, draggedId);
                     mainLayout.loadInitialData();
                 }
