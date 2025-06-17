@@ -48,6 +48,7 @@
     -fx-max-width: 60px;
     -fx-max-height: 60px;
     -fx-border-color: transparent;
+    -fx-background-insets: 2;
 }
 
 #passwordButton {
@@ -58,6 +59,7 @@
     -fx-max-width: 60px;
     -fx-max-height: 60px;
     -fx-border-color: transparent;
+    -fx-background-insets: 2;
 }
 
 #rootPane {
