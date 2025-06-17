@@ -1,5 +1,9 @@
 package application;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,11 +13,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +40,13 @@ public class MainLayout implements Initializable {
     @FXML private Button saveAccountButton;
     @FXML private Label usernameLabel;
     @FXML private Pane hoverOverlay;
-    @FXML private StackPane stack;
+    @FXML private HBox slidingButtonBox;
+    @FXML private Button folderButton;
+    @FXML private Button passwordButton;
+    @FXML private Button addAccountButton;
+
+    private boolean isHovering = false;
+    private javafx.animation.PauseTransition hideDelay;
 
     private File selectedIconFile;
     private Integer editingAccountId = null;
@@ -45,6 +56,44 @@ public class MainLayout implements Initializable {
     public Pane getHoverLayer() {
         return hoverOverlay;
     }
+
+    @FXML
+    private void showSlideButtons() {
+        TranslateTransition tt1 = new TranslateTransition(Duration.millis(100), passwordButton);
+        tt1.setToX(0);
+
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(100), folderButton);
+        tt2.setToX(0);
+
+        FadeTransition ft1 = new FadeTransition(Duration.millis(200), passwordButton);
+        ft1.setToValue(1);
+
+        FadeTransition ft2 = new FadeTransition(Duration.millis(200), folderButton);
+        ft2.setToValue(1);
+
+        ParallelTransition pt = new ParallelTransition(tt1, tt2, ft1, ft2);
+        pt.play();
+    }
+
+
+    @FXML
+    private void hideSlideButtons() {
+        TranslateTransition tt1 = new TranslateTransition(Duration.millis(100), passwordButton);
+        tt1.setToX(50);
+
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(100), folderButton);
+        tt2.setToX(50);
+
+        FadeTransition ft1 = new FadeTransition(Duration.millis(200), passwordButton);
+        ft1.setToValue(0);
+
+        FadeTransition ft2 = new FadeTransition(Duration.millis(200), folderButton);
+        ft2.setToValue(0);
+
+        ParallelTransition pt = new ParallelTransition(tt1, tt2, ft1, ft2);
+        pt.play();
+    }
+
 
     @FXML
     public void addAccount() {
@@ -85,7 +134,31 @@ public class MainLayout implements Initializable {
         } else {
             usernameLabel.setText(username + "'s passwords");
         }
+        hideDelay = new javafx.animation.PauseTransition(Duration.millis(200));
+        hideDelay.setOnFinished(e -> {
+            if (!isHovering) hideSlideButtons();
+        });
 
+        EventHandler<MouseEvent> enterHandler = e -> {
+            isHovering = true;
+            hideDelay.stop();
+            showSlideButtons();
+        };
+
+        EventHandler<MouseEvent> exitHandler = e -> {
+            isHovering = false;
+            hideDelay.playFromStart();
+        };
+
+        // Apply to all relevant nodes
+        passwordButton.setOnMouseEntered(enterHandler);
+        passwordButton.setOnMouseExited(exitHandler);
+        folderButton.setOnMouseEntered(enterHandler);
+        folderButton.setOnMouseExited(exitHandler);
+        addAccountButton.setOnMouseEntered(enterHandler);
+        addAccountButton.setOnMouseExited(exitHandler);
+        slidingButtonBox.setOnMouseEntered(enterHandler);
+        slidingButtonBox.setOnMouseExited(exitHandler);
     }
 
     public void loadInitialData() {
@@ -165,8 +238,19 @@ public class MainLayout implements Initializable {
                 card.getStyleClass().add("account-card");
                 controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
                 StackPane cardWrapper = new StackPane();
-                cardWrapper.getChildren().add(card); // this is your AccountCard loaded from FXML
+                cardWrapper.getChildren().add(card);
                 tilePane.getChildren().add(cardWrapper);
+
+                ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
+                passwordIcon.setFitWidth(18);
+                passwordIcon.setFitHeight(18);
+                passwordButton.setGraphic(passwordIcon);
+
+                ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
+                folderIcon.setFitWidth(18);
+                folderIcon.setFitHeight(18);
+                folderButton.setGraphic(folderIcon);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

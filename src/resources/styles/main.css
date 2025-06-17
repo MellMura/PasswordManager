@@ -40,6 +40,26 @@
     -fx-border-color: transparent;
 }
 
+#folderButton {
+    -fx-background-color: #2547c3;
+    -fx-background-radius: 30px;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
+    -fx-border-color: transparent;
+}
+
+#passwordButton {
+    -fx-background-color: #3a5add;
+    -fx-background-radius: 30px;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
+    -fx-border-color: transparent;
+}
+
 #rootPane {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.05, 2, 2);
 }

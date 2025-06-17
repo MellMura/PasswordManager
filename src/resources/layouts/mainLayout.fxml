@@ -59,7 +59,14 @@
             </StackPane>
             <HBox fx:id="footer" alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="600.0">
                <children>
-                   <Button fx:id="addAccountButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addAccount" prefHeight="48.0" prefWidth="52.0" style="-fx-padding: 0;" text="+" />
+                  <HBox fx:id="slidingButtonBox" spacing="5" alignment="CENTER_RIGHT" style="-fx-padding: 5;">
+
+                  <children>
+                        <Button fx:id="passwordButton" opacity="0"/>
+                        <Button fx:id="folderButton" opacity="0"/>
+                        <Button fx:id="addAccountButton" onAction="#addAccount" text="+" onMouseEntered="#showSlideButtons" onMouseExited="#hideSlideButtons"/>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </children>
