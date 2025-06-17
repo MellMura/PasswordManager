@@ -280,10 +280,8 @@ public class AccountCard {
         String name = nameLabel.getText();
         boolean success = AccountManager.removeAccount(name);
         if (success) {
-            Pane parent = (Pane) cardWrapper.getParent();
-            parent.getChildren().remove(cardWrapper);
+            mainLayout.loadInitialData();
         }
-
     }
 
     @FXML
