@@ -196,13 +196,8 @@ public class AccountCard {
     }
 
     public void togglePasswordVisibility() {
-        if (isPasswordVisible) {
-            passwordValue.setText("•".repeat(originalPassword.length()));
-            isPasswordVisible = false;
-        } else {
-            passwordValue.setText(originalPassword);
-            isPasswordVisible = true;
-        }
+        isPasswordVisible = !isPasswordVisible;
+        passwordValue.setText(isPasswordVisible ? originalPassword : "•".repeat(originalPassword.length()));
     }
 
     public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
@@ -240,7 +235,7 @@ public class AccountCard {
             Color saturatedColor = saturateColor(baseColor, 1.6);
             Color textColor = isDark(saturatedColor) ? Color.WHITE : Color.BLACK;
             Color finalSaturatedColor = saturatedColor;
-            this.originalPassword = password;
+
 
             editBtn.setOnMouseEntered(e -> {
                 Color hoverColor = isDark(finalSaturatedColor)
@@ -306,7 +301,9 @@ public class AccountCard {
             passwordIcon.setFitWidth(16);
             passwordIcon.setFitHeight(16);
 
-            passwordValue = new Label("•".repeat(password.length()));
+            this.originalPassword = password;
+            passwordValue = new Label(isPasswordVisible ? originalPassword : "•".repeat(originalPassword.length()));
+
             isPasswordVisible = false;
             passwordValue.setTextFill(textColor);
             passwordValue.setOnMouseClicked(event -> togglePasswordVisibility());
