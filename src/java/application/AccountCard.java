@@ -22,10 +22,8 @@ import java.io.File;
 public class AccountCard {
     @FXML
     private Label nameLabel;
-    @FXML
-    private Label emailLabel;
-    @FXML
-    private Label passwordLabel;
+    @FXML private HBox emailBox;
+    @FXML private HBox passwordBox;
     @FXML
     private ImageView iconImage;
     @FXML
@@ -34,6 +32,8 @@ public class AccountCard {
     private StackPane cardWrapper;
     @FXML
     private HBox cardHeader;
+    private Label emailValue;
+    private Label passwordValue;
 
     private VBox hoverButtons;
     private Button editButton;
@@ -197,13 +197,9 @@ public class AccountCard {
         hoverButtons.setVisible(false);
         hoverButtons.setOpacity(0);
 
-        Button editBtn = new Button("✏");
-        editBtn.setPrefSize(38, 38);
-        editBtn.setOnAction(e -> editAccount());
+        Button editBtn = new Button();
+        Button deleteBtn = new Button();
 
-        Button deleteBtn = new Button("🗑");
-        deleteBtn.setPrefSize(38, 38);
-        deleteBtn.setOnAction(e -> deleteAccount());
         editBtn.getStyleClass().add("hover-button");
         deleteBtn.getStyleClass().add("hover-button");
         this.editButton = editBtn;
@@ -217,8 +213,6 @@ public class AccountCard {
         }
 
         nameLabel.setText(name);
-        emailLabel.setText("E-mail: " + email);
-        passwordLabel.setText("Password: " + password);
 
         if (iconUrl != null && !iconUrl.isEmpty()) {
             File iconFile = new File(iconUrl);
@@ -264,10 +258,43 @@ public class AccountCard {
                     new BackgroundFill(saturatedColor, new CornerRadii(5), Insets.EMPTY)
             ));
             nameLabel.setTextFill(textColor);
-            emailLabel.setTextFill(textColor);
-            passwordLabel.setTextFill(textColor);
-            deleteButton.setTextFill(textColor);
-            editButton.setTextFill(textColor);
+
+            String iconVariant = textColor.equals(Color.WHITE) ? "-white" : "-black";
+            ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/pencil" + iconVariant + ".png")));
+            editIcon.setFitWidth(18);
+            editIcon.setFitHeight(18);
+            editBtn.setGraphic(editIcon);
+            editBtn.setPrefSize(38, 38);
+            editBtn.setOnAction(e -> editAccount());
+            editBtn.setAlignment(Pos.CENTER);
+
+            ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/trash" + iconVariant + ".png")));
+            deleteIcon.setFitWidth(18);
+            deleteIcon.setFitHeight(18);
+            deleteBtn.setGraphic(deleteIcon);
+            deleteBtn.setPrefSize(38, 38);
+            deleteBtn.setOnAction(e -> deleteAccount());
+            editBtn.setAlignment(Pos.CENTER);
+
+            ImageView emailIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/mail" + iconVariant + ".png")));
+            emailIcon.setFitWidth(16);
+            emailIcon.setFitHeight(16);
+
+            emailValue = new Label(email);
+            emailValue.setTextFill(textColor);
+
+            emailBox.getChildren().clear();
+            emailBox.getChildren().addAll(emailIcon, emailValue);
+
+            ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/lock-keyhole" + iconVariant + ".png")));
+            passwordIcon.setFitWidth(16);
+            passwordIcon.setFitHeight(16);
+
+            passwordValue = new Label(password);
+            passwordValue.setTextFill(textColor);
+
+            passwordBox.getChildren().clear();
+            passwordBox.getChildren().addAll(passwordIcon, passwordValue);
 
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid color: " + colorHex);
@@ -289,8 +316,8 @@ public class AccountCard {
         AccountModel acc = new AccountModel();
         acc.id = (Integer) cardWrapper.getUserData();
         acc.name = nameLabel.getText();
-        acc.email = emailLabel.getText().replace("E-mail: ", "");
-        acc.password = passwordLabel.getText().replace("Password: ", "");
+        acc.email = emailValue.getText().replace("E-mail: ", "");
+        acc.password = passwordValue.getText().replace("Password: ", "");
         Background bg = rootPane.getBackground();
         if (bg != null && !bg.getFills().isEmpty()) {
             acc.color = bg.getFills().get(0).getFill().toString();
