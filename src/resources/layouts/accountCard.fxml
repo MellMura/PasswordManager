@@ -9,6 +9,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
 <StackPane fx:id="cardWrapper"
            xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -17,7 +18,7 @@
            onMouseExited="#handleMouseExited">
    <AnchorPane fx:id="rootPane" prefHeight="280.0" prefWidth="280.0">
       <children>
-         <VBox alignment="TOP_CENTER" prefHeight="280.0" prefWidth="280.0">
+         <VBox alignment="TOP_CENTER" prefHeight="280.0" prefWidth="280.0" spacing="15">
             <children>
                <HBox fx:id="cardHeader" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" prefWidth="280.0">
 
@@ -29,7 +30,10 @@
                      </Label>
                   </children>
                </HBox>
-               <ImageView fx:id="iconImage" fitHeight="57.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
+               <StackPane>
+                  <ImageView fx:id="iconImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                  </ImageView>
+               </StackPane>
                <HBox fx:id="emailBox" spacing="5" alignment="CENTER_LEFT"/>
                <HBox fx:id="passwordBox" spacing="5" alignment="CENTER_LEFT"/>
             </children>

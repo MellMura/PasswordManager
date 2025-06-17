@@ -15,6 +15,12 @@
     -fx-background-color: #01bfa9;
 }
 
+#emailBox, #passwordBox{
+    -fx-padding: 5px 10px;
+    -fx-font-size: 15px;
+}
+
+
 #tilePane {
     -fx-background-color: white;
     -fx-background-radius: 10px 10px 0 0;
@@ -66,12 +72,13 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.05, 2, 2);
 }
 
-#cardHeader {
-    -fx-padding: 10px 5px;
+.stack-pane {
+    -fx-padding: 10px 0 10px 0;
 }
 
 #nameLabel {
     -fx-font-size: 15px;
+    -fx-padding: 10px;
     -fx-font-weight: bold;
 }
 
