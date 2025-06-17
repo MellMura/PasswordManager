@@ -115,6 +115,13 @@ public class AccountCard {
         return Color.rgb(r, g, b, color.getOpacity());
     }
 
+    private Color lightenColor(Color color, double factor) {
+        double r = Math.min(1.0, color.getRed() + (1.0 - color.getRed()) * factor);
+        double g = Math.min(1.0, color.getGreen() + (1.0 - color.getGreen()) * factor);
+        double b = Math.min(1.0, color.getBlue() + (1.0 - color.getBlue()) * factor);
+        return new Color(r, g, b, color.getOpacity());
+    }
+
     private boolean isDark(Color color) {
         double luminance = 0.2126 * color.getRed() + 0.7152 * color.getGreen() + 0.0722 * color.getBlue();
         return luminance < 0.5;
@@ -227,7 +234,7 @@ public class AccountCard {
             Color finalSaturatedColor = saturatedColor;
             editBtn.setOnMouseEntered(e -> {
                 Color hoverColor = isDark(finalSaturatedColor)
-                        ? finalSaturatedColor.brighter()
+                        ? lightenColor(finalSaturatedColor, 0.2)
                         : saturateColor(finalSaturatedColor, 1.4);
                 editBtn.setBackground(new Background(new BackgroundFill(hoverColor, new CornerRadii(5), Insets.EMPTY)));
             });
@@ -237,7 +244,7 @@ public class AccountCard {
 
             deleteBtn.setOnMouseEntered(e -> {
                 Color hoverColor = isDark(finalSaturatedColor)
-                        ? finalSaturatedColor.brighter()
+                        ? lightenColor(finalSaturatedColor, 0.2)
                         : saturateColor(finalSaturatedColor, 1.4);
                 deleteBtn.setBackground(new Background(new BackgroundFill(hoverColor, new CornerRadii(5), Insets.EMPTY)));
             });
