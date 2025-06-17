@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -41,6 +42,9 @@ public class AccountCard {
     private MainLayout mainLayout;
 
     private AccountModel currentModel;
+
+    private String originalPassword;
+    private boolean isPasswordVisible = false;
 
 
     @FXML
@@ -191,6 +195,16 @@ public class AccountCard {
         }
     }
 
+    public void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            passwordValue.setText("•".repeat(originalPassword.length()));
+            isPasswordVisible = false;
+        } else {
+            passwordValue.setText(originalPassword);
+            isPasswordVisible = true;
+        }
+    }
+
     public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
         currentModel = new AccountModel(id, name, email, password, iconUrl, colorHex);
         hoverButtons = new VBox(5);
@@ -226,6 +240,8 @@ public class AccountCard {
             Color saturatedColor = saturateColor(baseColor, 1.6);
             Color textColor = isDark(saturatedColor) ? Color.WHITE : Color.BLACK;
             Color finalSaturatedColor = saturatedColor;
+            this.originalPassword = password;
+
             editBtn.setOnMouseEntered(e -> {
                 Color hoverColor = isDark(finalSaturatedColor)
                         ? lightenColor(finalSaturatedColor, 0.2)
@@ -290,8 +306,11 @@ public class AccountCard {
             passwordIcon.setFitWidth(16);
             passwordIcon.setFitHeight(16);
 
-            passwordValue = new Label(password);
+            passwordValue = new Label("•".repeat(password.length()));
+            isPasswordVisible = false;
             passwordValue.setTextFill(textColor);
+            passwordValue.setOnMouseClicked(event -> togglePasswordVisibility());
+            passwordValue.setCursor(Cursor.HAND);
 
             passwordBox.getChildren().clear();
             passwordBox.getChildren().addAll(passwordIcon, passwordValue);
