@@ -37,6 +37,7 @@ public class MainLayout implements Initializable {
     @FXML private TextField emailField;
     @FXML private TextField passwordField;
     @FXML private TilePane tilePane;
+    @FXML private Pane semiTransparent;
     @FXML private Button saveAccountButton;
     @FXML private Label usernameLabel;
     @FXML private Pane hoverOverlay;
@@ -104,11 +105,13 @@ public class MainLayout implements Initializable {
 
     @FXML
     public void addAccount() {
+        semiTransparent.setVisible(true);
         formSubScene.setVisible(true);
     }
 
     @FXML
     public void editAccount(AccountModel account) {
+        semiTransparent.setVisible(true);
         saveAccountButton.setText("Update");
         nameField.setText(account.name);
         emailField.setText(account.email);
@@ -162,6 +165,7 @@ public class MainLayout implements Initializable {
 
     @FXML
     public void closeForm() {
+        semiTransparent.setVisible(false);
         formSubScene.setVisible(false);
         nameField.clear();
         emailField.clear();
