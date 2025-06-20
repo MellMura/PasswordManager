@@ -62,9 +62,9 @@
                   <HBox fx:id="slidingButtonBox" alignment="CENTER_RIGHT" style="-fx-padding: 5;">
 
                   <children>
-                        <Button fx:id="passwordButton" opacity="0"/>
                         <Button fx:id="folderButton" opacity="0"/>
-                        <Button fx:id="addAccountButton" onAction="#addAccount" text="+" onMouseEntered="#showSlideButtons" onMouseExited="#hideSlideButtons"/>
+                        <Button fx:id="passwordButton" onAction="#addAccount" opacity="0"/>
+                        <Button fx:id="addAccountButton" onAction="#toggleSlideButtons" text="+"/>
                      </children>
                   </HBox>
                </children>

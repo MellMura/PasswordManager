@@ -44,6 +44,7 @@ public class MainLayout implements Initializable {
     @FXML private Button folderButton;
     @FXML private Button passwordButton;
     @FXML private Button addAccountButton;
+    private boolean slideButtonsVisible = false;
 
     private boolean isHovering = false;
     private javafx.animation.PauseTransition hideDelay;
@@ -57,43 +58,49 @@ public class MainLayout implements Initializable {
         return hoverOverlay;
     }
 
-    @FXML
     private void showSlideButtons() {
-        TranslateTransition tt1 = new TranslateTransition(Duration.millis(100), passwordButton);
-        tt1.setToX(0);
+        passwordButton.setTranslateX(50);
+        folderButton.setTranslateX(50);
+        passwordButton.setOpacity(0);
+        folderButton.setOpacity(0);
 
-        TranslateTransition tt2 = new TranslateTransition(Duration.millis(100), folderButton);
+        TranslateTransition tt1 = new TranslateTransition(Duration.millis(150), passwordButton);
+        tt1.setToX(0);
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(150), folderButton);
         tt2.setToX(0);
 
-        FadeTransition ft1 = new FadeTransition(Duration.millis(200), passwordButton);
+        FadeTransition ft1 = new FadeTransition(Duration.millis(150), passwordButton);
         ft1.setToValue(1);
-
-        FadeTransition ft2 = new FadeTransition(Duration.millis(200), folderButton);
+        FadeTransition ft2 = new FadeTransition(Duration.millis(150), folderButton);
         ft2.setToValue(1);
 
-        ParallelTransition pt = new ParallelTransition(tt1, tt2, ft1, ft2);
-        pt.play();
+        new ParallelTransition(tt1, tt2, ft1, ft2).play();
     }
 
 
-    @FXML
     private void hideSlideButtons() {
-        TranslateTransition tt1 = new TranslateTransition(Duration.millis(100), passwordButton);
+        TranslateTransition tt1 = new TranslateTransition(Duration.millis(150), passwordButton);
         tt1.setToX(50);
-
-        TranslateTransition tt2 = new TranslateTransition(Duration.millis(100), folderButton);
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(150), folderButton);
         tt2.setToX(50);
 
-        FadeTransition ft1 = new FadeTransition(Duration.millis(200), passwordButton);
+        FadeTransition ft1 = new FadeTransition(Duration.millis(150), passwordButton);
         ft1.setToValue(0);
-
-        FadeTransition ft2 = new FadeTransition(Duration.millis(200), folderButton);
+        FadeTransition ft2 = new FadeTransition(Duration.millis(150), folderButton);
         ft2.setToValue(0);
 
-        ParallelTransition pt = new ParallelTransition(tt1, tt2, ft1, ft2);
-        pt.play();
+        new ParallelTransition(tt1, tt2, ft1, ft2).play();
     }
 
+    @FXML
+    private void toggleSlideButtons() {
+        if (slideButtonsVisible) {
+            hideSlideButtons();
+        } else {
+            showSlideButtons();
+        }
+        slideButtonsVisible = !slideButtonsVisible;
+    }
 
     @FXML
     public void addAccount() {
@@ -123,9 +130,20 @@ public class MainLayout implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadInitialData();
+
         javafx.application.Platform.runLater(() -> {
             String css = getClass().getResource("/styles/main.css").toExternalForm();
             tilePane.getScene().getStylesheets().add(css);
+
+            tilePane.getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                Node target = event.getPickResult().getIntersectedNode();
+                if (slideButtonsVisible &&
+                        target != addAccountButton &&
+                        !slidingButtonBox.getChildren().contains(target)) {
+                    hideSlideButtons();
+                    slideButtonsVisible = false;
+                }
+            });
         });
 
         String username = UserSession.getUsername();
@@ -134,31 +152,6 @@ public class MainLayout implements Initializable {
         } else {
             usernameLabel.setText(username + "'s passwords");
         }
-        hideDelay = new javafx.animation.PauseTransition(Duration.millis(200));
-        hideDelay.setOnFinished(e -> {
-            if (!isHovering) hideSlideButtons();
-        });
-
-        EventHandler<MouseEvent> enterHandler = e -> {
-            isHovering = true;
-            hideDelay.stop();
-            showSlideButtons();
-        };
-
-        EventHandler<MouseEvent> exitHandler = e -> {
-            isHovering = false;
-            hideDelay.playFromStart();
-        };
-
-        // Apply to all relevant nodes
-        passwordButton.setOnMouseEntered(enterHandler);
-        passwordButton.setOnMouseExited(exitHandler);
-        folderButton.setOnMouseEntered(enterHandler);
-        folderButton.setOnMouseExited(exitHandler);
-        addAccountButton.setOnMouseEntered(enterHandler);
-        addAccountButton.setOnMouseExited(exitHandler);
-        slidingButtonBox.setOnMouseEntered(enterHandler);
-        slidingButtonBox.setOnMouseExited(exitHandler);
     }
 
     public void loadInitialData() {
