@@ -29,9 +29,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainLayout implements Initializable {
-    @FXML private SubScene formSubScene;
+    @FXML private SubScene passwordSubScene;
+    @FXML private SubScene folderSubScene;
 
     @FXML private TextField nameField;
+    @FXML private TextField nameFolderField;
     @FXML private ColorPicker colorPicker;
     @FXML private Button iconButton;
     @FXML private TextField emailField;
@@ -106,7 +108,13 @@ public class MainLayout implements Initializable {
     @FXML
     public void addAccount() {
         semiTransparent.setVisible(true);
-        formSubScene.setVisible(true);
+        passwordSubScene.setVisible(true);
+    }
+
+    @FXML
+    public void addFolder() {
+        semiTransparent.setVisible(true);
+        folderSubScene.setVisible(true);
     }
 
     @FXML
@@ -127,7 +135,7 @@ public class MainLayout implements Initializable {
             }
         }
         editingAccountId = account.id;
-        formSubScene.setVisible(true);
+        passwordSubScene.setVisible(true);
     }
 
     @Override
@@ -166,7 +174,8 @@ public class MainLayout implements Initializable {
     @FXML
     public void closeForm() {
         semiTransparent.setVisible(false);
-        formSubScene.setVisible(false);
+        passwordSubScene.setVisible(false);
+        folderSubScene.setVisible(false);
         nameField.clear();
         emailField.clear();
         passwordField.clear();
@@ -175,6 +184,19 @@ public class MainLayout implements Initializable {
         iconButton.setText("Choose Icon");
         editingAccountId = null;
         saveAccountButton.setText("Add");
+    }
+
+    @FXML
+    public void saveFolder() {
+        String name = nameFolderField.getText().trim();
+        if (name.isEmpty()) {
+            System.out.println("All fields are required.");
+            return;
+        }
+
+        FolderManager.saveFolder(UserSession.getUserId(), name);
+        closeForm();
+        loadInitialData();
     }
 
     @FXML

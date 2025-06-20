@@ -44,6 +44,7 @@ public class setUpDB {
                             ")"
             );
 
+            //create session_tokens table if not exists
             statement.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS session_tokens (" +
                             "user_id INT NOT NULL, " +
@@ -52,9 +53,19 @@ public class setUpDB {
                             ")"
             );
 
+            //create folder table if not exists
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS folders (" +
+                            "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                            "user_id INT NOT NULL, " +
+                            "name VARCHAR(30) NOT NULL UNIQUE " +
+                            ")"
+            );
+
             System.out.println("Table 'users' ensured.");
             System.out.println("Table 'saved_accounts' ensured.");
             System.out.println("Table 'session_tokens' ensured.");
+            System.out.println("Table 'folders' ensured.");
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
