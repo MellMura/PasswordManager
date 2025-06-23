@@ -56,7 +56,8 @@ public class MainLayout implements Initializable {
     private File selectedIconFile;
     private Integer editingAccountId = null;
 
-    private final Map<Node, AccountCard> controllerMap = new HashMap<>();
+    private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
+    private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
 
     public Pane getHoverLayer() {
         return hoverOverlay;
@@ -182,7 +183,14 @@ public class MainLayout implements Initializable {
     }
 
     public void loadInitialData() {
+        List<FolderModel> folders = new FolderManager().fetchFolders();
         List<AccountModel> accounts = new AccountManager().fetchAccounts();
+
+        tilePane.getChildren().clear();
+        folderControllerMap.clear();
+        accountControllerMap.clear();
+
+        renderSavedFolders(folders);
         renderSavedAccounts(accounts);
         colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
     }
@@ -264,17 +272,34 @@ public class MainLayout implements Initializable {
         }
     }
 
-    public void renderSavedAccounts(List<AccountModel> accounts) {
-        tilePane.getChildren().clear();
-        controllerMap.clear();
+    public void renderSavedFolders(List<FolderModel> folders) {
+        for (FolderModel fold : folders) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/folderCard.fxml"));
+                StackPane folder = loader.load();
+                FolderCard controller = loader.getController();
+                controller.setMainLayout(this);
+                folderControllerMap.put(folder, controller);
+                folder.setUserData(fold.id);
+                folder.getStyleClass().add("folder-card");
+                controller.setData(fold.id, fold.name);
+                StackPane cardWrapper = new StackPane();
+                cardWrapper.getChildren().add(folder);
+                tilePane.getChildren().add(cardWrapper);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public void renderSavedAccounts(List<AccountModel> accounts) {
         for (AccountModel acc : accounts) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/accountCard.fxml"));
                 StackPane card = loader.load();
                 AccountCard controller = loader.getController();
                 controller.setMainLayout(this);
-                controllerMap.put(card, controller);
+                accountControllerMap.put(card, controller);
                 card.setUserData(acc.id);
                 card.getStyleClass().add("account-card");
                 controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);

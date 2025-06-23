@@ -2,7 +2,10 @@ package application;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FolderManager {
     public static boolean saveFolder(int userId, String name) {
@@ -34,5 +37,32 @@ public class FolderManager {
             System.out.println("Database connection failed.");
             return false;
         }
+    }
+
+    public List<FolderModel> fetchFolders() {
+        List<FolderModel> folders = new ArrayList<>();
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "SELECT id, name FROM folders WHERE user_id = ? ORDER BY name ASC";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, UserSession.getUserId());
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    folders.add(new FolderModel(
+                            rs.getInt("id"),
+                            rs.getString("name")
+                    ));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Database connection failed.");
+        }
+
+        return folders;
     }
 }
