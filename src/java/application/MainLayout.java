@@ -32,6 +32,7 @@ public class MainLayout implements Initializable {
     @FXML private SubScene passwordSubScene;
     @FXML private SubScene folderSubScene;
 
+    @FXML private StackPane passwordSubSceneWrapper;
     @FXML private TextField nameField;
     @FXML private TextField nameFolderField;
     @FXML private ColorPicker colorPicker;
@@ -108,7 +109,7 @@ public class MainLayout implements Initializable {
     @FXML
     public void addAccount() {
         semiTransparent.setVisible(true);
-        passwordSubScene.setVisible(true);
+        passwordSubSceneWrapper.setVisible(true);
     }
 
     @FXML
@@ -135,7 +136,7 @@ public class MainLayout implements Initializable {
             }
         }
         editingAccountId = account.id;
-        passwordSubScene.setVisible(true);
+        passwordSubSceneWrapper.setVisible(true);
     }
 
     @Override
@@ -163,6 +164,21 @@ public class MainLayout implements Initializable {
         } else {
             usernameLabel.setText(username + "'s passwords");
         }
+
+        ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
+        passwordIcon.setFitWidth(18);
+        passwordIcon.setFitHeight(18);
+        passwordButton.setGraphic(passwordIcon);
+
+        ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
+        folderIcon.setFitWidth(18);
+        folderIcon.setFitHeight(18);
+        folderButton.setGraphic(folderIcon);
+
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/add-image.png")));
+        icon.setFitWidth(24);
+        icon.setFitHeight(24);
+        iconButton.setGraphic(icon);
     }
 
     public void loadInitialData() {
@@ -174,16 +190,22 @@ public class MainLayout implements Initializable {
     @FXML
     public void closeForm() {
         semiTransparent.setVisible(false);
-        passwordSubScene.setVisible(false);
+        passwordSubSceneWrapper.setVisible(false);
         folderSubScene.setVisible(false);
         nameField.clear();
+        nameFolderField.clear();
         emailField.clear();
         passwordField.clear();
         colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
         selectedIconFile = null;
-        iconButton.setText("Choose Icon");
         editingAccountId = null;
         saveAccountButton.setText("Add");
+
+        iconButton.setText("");
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/add-image.png")));
+        icon.setFitWidth(24);
+        icon.setFitHeight(24);
+        iconButton.setGraphic(icon);
     }
 
     @FXML
@@ -259,17 +281,6 @@ public class MainLayout implements Initializable {
                 StackPane cardWrapper = new StackPane();
                 cardWrapper.getChildren().add(card);
                 tilePane.getChildren().add(cardWrapper);
-
-                ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
-                passwordIcon.setFitWidth(18);
-                passwordIcon.setFitHeight(18);
-                passwordButton.setGraphic(passwordIcon);
-
-                ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
-                folderIcon.setFitWidth(18);
-                folderIcon.setFitHeight(18);
-                folderButton.setGraphic(folderIcon);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

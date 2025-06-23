@@ -33,33 +33,35 @@
                         visible="false"
                         mouseTransparent="false"
                         style="-fx-background-color: rgba(255,255,255,0.6);" />
-                  <SubScene fx:id="passwordSubScene" fill="#4daba5" height="250.0" visible="false" width="200.0">
-                     <root>
-                        <VBox xmlns="http://javafx.com/javafx/23.0.1"
-                              xmlns:fx="http://javafx.com/fxml"
-                              spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20;">
+                  <StackPane fx:id="passwordSubSceneWrapper" styleClass="subscene-wrapper" maxHeight="340.0" maxWidth="270.0" visible="false">
+                     <SubScene fx:id="passwordSubScene" height="330.0" width="260.0">
+                        <root>
+                           <VBox xmlns="http://javafx.com/javafx/23.0.1"
+                                 xmlns:fx="http://javafx.com/fxml"
+                                 spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20;">
 
-                           <HBox spacing="20" alignment="CENTER">
-                              <TextField fx:id="nameField" promptText="Account Name" HBox.hgrow="ALWAYS" />
-                              <ColorPicker fx:id="colorPicker" value="DEEPSKYBLUE"/>
-                           </HBox>
+                              <HBox spacing="20" alignment="CENTER">
+                                 <TextField fx:id="nameField" promptText="Account Name" HBox.hgrow="ALWAYS" />
+                                 <ColorPicker fx:id="colorPicker" value="DEEPSKYBLUE"/>
+                              </HBox>
 
-                           <Button fx:id="iconButton" text="Choose Icon" onAction="#chooseIcon" />
+                              <Button fx:id="iconButton" onAction="#chooseIcon" styleClass="icon-button" />
 
-                           <VBox spacing="10" alignment="CENTER">
-                              <TextField fx:id="emailField" promptText="Email" />
-                              <TextField fx:id="passwordField" promptText="Password" />
+                              <VBox spacing="10" alignment="CENTER">
+                                 <TextField fx:id="emailField" promptText="Email" />
+                                 <TextField fx:id="passwordField" promptText="Password" />
+                              </VBox>
+
+                              <HBox spacing="10" alignment="CENTER">
+                                 <Button fx:id="cancelButton" text="Cancel" onAction="#closeForm" />
+                                 <Button fx:id="saveAccountButton" text="Save" onAction="#saveAccount" />
+                              </HBox>
                            </VBox>
+                        </root>
+                     </SubScene>
+                  </StackPane>
 
-                           <HBox spacing="10" alignment="CENTER">
-                              <Button fx:id="cancelButton" text="Cancel" onAction="#closeForm" />
-                              <Button fx:id="saveAccountButton" text="Save" onAction="#saveAccount" />
-                           </HBox>
-                        </VBox>
-                     </root>
-                  </SubScene>
-
-                  <SubScene fx:id="folderSubScene" fill="#4daba5" height="100.0" visible="false" width="200.0">
+                  <SubScene fx:id="folderSubScene" fill="#4daba5" height="140.0" visible="false" width="200.0">
                      <root>
                         <VBox xmlns="http://javafx.com/javafx/23.0.1"
                               xmlns:fx="http://javafx.com/fxml"

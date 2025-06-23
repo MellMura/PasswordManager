@@ -98,3 +98,41 @@
     -fx-background-color: transparent;
     -fx-padding: 0;
 }
+
+#saveAccountButton, #saveFolderButton, #cancelButton, #cancelFolderButton {
+    -fx-background-color: #173297;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30px;
+    -fx-min-width: 80px;
+    -fx-min-height: 40px;
+    -fx-max-width: 80px;
+    -fx-max-height: 40px;
+    -fx-border-color: transparent;
+}
+
+#saveAccountButton:hover, #saveFolderButton:hover, #cancelButton:hover, #cancelFolderButton:hover {
+    -fx-background-color: #10267e;
+}
+
+.subscene-wrapper {
+    -fx-border-color: #01bfa9;
+    -fx-border-width: 3px;
+    -fx-border-style: dashed;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+    -fx-padding: 5;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(0,0,0,0.05);
+}
