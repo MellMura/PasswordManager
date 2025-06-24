@@ -242,7 +242,7 @@ public class AccountCard {
         }
 
         try {Color baseColor = Color.web(colorHex);
-            Color saturatedColor = saturateColor(baseColor, 1.6);
+            Color saturatedColor = saturateColor(baseColor, 1.7);
             Color textColor = isDark(saturatedColor) ? Color.WHITE : Color.BLACK;
             Color finalSaturatedColor = saturatedColor;
 
@@ -348,7 +348,7 @@ public class AccountCard {
         if (bg != null && !bg.getFills().isEmpty()) {
             acc.color = bg.getFills().get(0).getFill().toString();
         } else {
-            acc.color = "#00bfff";
+            acc.color = "#84e8d4";
         }
         acc.iconUrl = iconImage.getImage() != null ? iconImage.getImage().getUrl().replace("file:/", "") : null;
 

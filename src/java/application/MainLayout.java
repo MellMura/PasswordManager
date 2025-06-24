@@ -192,7 +192,7 @@ public class MainLayout implements Initializable {
 
         renderSavedFolders(folders);
         renderSavedAccounts(accounts);
-        colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
+        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
     @FXML
@@ -204,7 +204,7 @@ public class MainLayout implements Initializable {
         nameFolderField.clear();
         emailField.clear();
         passwordField.clear();
-        colorPicker.setValue(javafx.scene.paint.Color.web("#00bfff"));
+        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
         selectedIconFile = null;
         editingAccountId = null;
         saveAccountButton.setText("Add");
