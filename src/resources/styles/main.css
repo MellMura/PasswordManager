@@ -88,7 +88,7 @@
     -fx-padding: 10px 0 10px 0;
 }
 
-#nameLabel {
+#nameLabel, #nameFolderLabel {
     -fx-font-size: 15px;
     -fx-padding: 10px;
     -fx-font-weight: bold;
@@ -97,6 +97,19 @@
 .hover-buttons {
     -fx-background-color: transparent;
     -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.hover-folder-button {
+    -fx-background-color: #e0efed;
+    -fx-background-radius: 5;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.hover-folder-button:hover {
+    -fx-background-color: #c8d8d6;
 }
 
 #saveAccountButton, #saveFolderButton, #cancelButton, #cancelFolderButton {

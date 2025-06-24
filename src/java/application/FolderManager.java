@@ -24,7 +24,6 @@ public class FolderManager {
                 int rowsInserted = preparedStatement.executeUpdate();
 
                 if (rowsInserted > 0) {
-                    System.out.println("Folder created successfully!");
                     return true;
                 } else {
                     System.out.println("Folder creation failed.");
@@ -57,6 +56,34 @@ public class FolderManager {
                     System.out.println("Folder saving failed.");
                     return false;
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Database connection failed.");
+            return false;
+        }
+    }
+
+    public static boolean removeFolder(String name) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String deleteSql = "DELETE FROM folders WHERE name = ?";
+                PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+                deleteStatement.setString(1, name);
+                int rowsDeleted = deleteStatement.executeUpdate();
+
+                if (rowsDeleted > 0) {
+                    return true;
+                }
+                else {
+                    System.out.println("Folder deletion failed.");
+                    return false;
+                }
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;

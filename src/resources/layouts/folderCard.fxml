@@ -21,7 +21,7 @@
                </HBox>
                <VBox fx:id="folderBackground" prefHeight="200.0" prefWidth="100.0">
                   <children>
-                     <Label fx:id="nameLabel" prefHeight="42.0" prefWidth="280.0" text="[NAME]">
+                     <Label fx:id="nameFolderLabel" prefHeight="42.0" prefWidth="280.0" text="[NAME]">
                         <font>
                            <Font name="System Bold" size="12.0" />
                         </font>

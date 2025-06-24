@@ -13,9 +13,10 @@ public class FolderCard {
     private FolderModel currentModel;
 
     @FXML
-    private Label nameLabel;
+    private Label nameFolderLabel;
     @FXML
     private StackPane cardWrapper;
+    @FXML
     private VBox hoverButtons;
     private Button editButton;
     private Button deleteButton;
@@ -52,7 +53,15 @@ public class FolderCard {
     }
 
     public String getName() {
-        return nameLabel.getText();
+        return nameFolderLabel.getText();
+    }
+
+    public void deleteFolder() {
+        String name = nameFolderLabel.getText();
+        boolean success = FolderManager.removeFolder(name);
+        if (success) {
+            mainLayout.loadInitialData();
+        }
     }
 
     public void setData(int id, String name) {
@@ -60,12 +69,13 @@ public class FolderCard {
         hoverButtons = new VBox(5);
         hoverButtons.setVisible(false);
         hoverButtons.setOpacity(0);
+        hoverButtons.setTranslateX(-10);
 
         Button editBtn = new Button();
         Button deleteBtn = new Button();
 
-        editBtn.getStyleClass().add("hover-button");
-        deleteBtn.getStyleClass().add("hover-button");
+        editBtn.getStyleClass().add("hover-folder-button");
+        deleteBtn.getStyleClass().add("hover-folder-button");
         this.editButton = editBtn;
         this.deleteButton = deleteBtn;
 
@@ -76,7 +86,7 @@ public class FolderCard {
             mainLayout.getHoverLayer().getChildren().add(hoverButtons);
         }
 
-        nameLabel.setText(name);
+        nameFolderLabel.setText(name);
         cardWrapper.setOnMouseEntered(e -> showHoverButtons());
         cardWrapper.setOnMouseExited(e -> hideHoverButtons());
 
@@ -93,9 +103,7 @@ public class FolderCard {
         deleteIcon.setFitHeight(18);
         deleteBtn.setGraphic(deleteIcon);
         deleteBtn.setPrefSize(38, 38);
-        //editBtn.setOnAction(e -> editAccount());
+        deleteBtn.setOnAction(e -> deleteFolder());
         deleteBtn.setAlignment(Pos.CENTER);
     }
-
-
 }
