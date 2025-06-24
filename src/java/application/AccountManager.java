@@ -50,7 +50,6 @@ public class AccountManager {
                 int rowsInserted = preparedStatement.executeUpdate();
 
                 if (rowsInserted > 0) {
-                    System.out.println("Account saved successfully!");
                     return true;
                 } else {
                     System.out.println("Account saving failed.");

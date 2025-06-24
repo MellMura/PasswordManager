@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +28,33 @@ public class FolderManager {
                     return true;
                 } else {
                     System.out.println("Folder creation failed.");
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Database connection failed.");
+            return false;
+        }
+    }
+
+    public static boolean updateFolder(int id, String name) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "UPDATE folders SET name = ? WHERE id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, name);
+                preparedStatement.setInt(2, id);
+
+                int rowsUpdated = preparedStatement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    return true;
+                } else {
+                    System.out.println("Folder saving failed.");
                     return false;
                 }
             } catch (SQLException e) {

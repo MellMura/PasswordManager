@@ -1,8 +1,11 @@
 package application;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -74,6 +77,24 @@ public class FolderCard {
         }
 
         nameLabel.setText(name);
+        cardWrapper.setOnMouseEntered(e -> showHoverButtons());
+        cardWrapper.setOnMouseExited(e -> hideHoverButtons());
+
+        ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/pencil-black.png")));
+        editIcon.setFitWidth(18);
+        editIcon.setFitHeight(18);
+        editBtn.setGraphic(editIcon);
+        editBtn.setPrefSize(38, 38);
+        editBtn.setOnAction(e -> mainLayout.editFolder(currentModel));
+        editBtn.setAlignment(Pos.CENTER);
+
+        ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/trash-black.png")));
+        deleteIcon.setFitWidth(18);
+        deleteIcon.setFitHeight(18);
+        deleteBtn.setGraphic(deleteIcon);
+        deleteBtn.setPrefSize(38, 38);
+        //editBtn.setOnAction(e -> editAccount());
+        deleteBtn.setAlignment(Pos.CENTER);
     }
 
 

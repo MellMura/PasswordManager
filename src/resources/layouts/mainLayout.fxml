@@ -61,23 +61,25 @@
                      </SubScene>
                   </StackPane>
 
-                  <SubScene fx:id="folderSubScene" fill="#4daba5" height="140.0" visible="false" width="200.0">
-                     <root>
-                        <VBox xmlns="http://javafx.com/javafx/23.0.1"
-                              xmlns:fx="http://javafx.com/fxml"
-                              spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20;">
+                  <StackPane fx:id="folderSubSceneWrapper" styleClass="subscene-wrapper" maxHeight="140.0" maxWidth="200.0" visible="false">
+                     <SubScene fx:id="folderSubScene" fill="#4daba5" height="140.0" width="200.0">
+                        <root>
+                           <VBox xmlns="http://javafx.com/javafx/23.0.1"
+                                 xmlns:fx="http://javafx.com/fxml"
+                                 spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20;">
 
-                           <HBox spacing="20" alignment="CENTER">
-                              <TextField fx:id="nameFolderField" promptText="Folder Name" HBox.hgrow="ALWAYS" />
-                           </HBox>
+                              <HBox spacing="20" alignment="CENTER">
+                                 <TextField fx:id="nameFolderField" promptText="Folder Name" HBox.hgrow="ALWAYS" />
+                              </HBox>
 
-                           <HBox spacing="10" alignment="CENTER">
-                              <Button fx:id="cancelFolderButton" text="Cancel" onAction="#closeForm" />
-                              <Button fx:id="saveFolderButton" text="Save" onAction="#saveFolder"/>
-                           </HBox>
-                        </VBox>
-                     </root>
-                  </SubScene>
+                              <HBox spacing="10" alignment="CENTER">
+                                 <Button fx:id="cancelFolderButton" text="Cancel" onAction="#closeForm" />
+                                 <Button fx:id="saveFolderButton" text="Save" onAction="#saveFolder"/>
+                              </HBox>
+                           </VBox>
+                        </root>
+                     </SubScene>
+                  </StackPane>
                   <Pane fx:id="hoverOverlay" pickOnBounds="false" />
 
                </children>

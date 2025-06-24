@@ -33,6 +33,7 @@ public class MainLayout implements Initializable {
     @FXML private SubScene folderSubScene;
 
     @FXML private StackPane passwordSubSceneWrapper;
+    @FXML private StackPane folderSubSceneWrapper;
     @FXML private TextField nameField;
     @FXML private TextField nameFolderField;
     @FXML private ColorPicker colorPicker;
@@ -55,6 +56,7 @@ public class MainLayout implements Initializable {
 
     private File selectedIconFile;
     private Integer editingAccountId = null;
+    private Integer editingFolderId = null;
 
     private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
     private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
@@ -116,7 +118,7 @@ public class MainLayout implements Initializable {
     @FXML
     public void addFolder() {
         semiTransparent.setVisible(true);
-        folderSubScene.setVisible(true);
+        folderSubSceneWrapper.setVisible(true);
     }
 
     @FXML
@@ -138,6 +140,15 @@ public class MainLayout implements Initializable {
         }
         editingAccountId = account.id;
         passwordSubSceneWrapper.setVisible(true);
+    }
+
+    @FXML
+    public void editFolder(FolderModel folder) {
+        semiTransparent.setVisible(true);
+        saveAccountButton.setText("Update");
+        nameFolderField.setText(folder.name);
+        editingFolderId = folder.id;
+        folderSubSceneWrapper.setVisible(true);
     }
 
     @Override
@@ -199,7 +210,7 @@ public class MainLayout implements Initializable {
     public void closeForm() {
         semiTransparent.setVisible(false);
         passwordSubSceneWrapper.setVisible(false);
-        folderSubScene.setVisible(false);
+        folderSubSceneWrapper.setVisible(false);
         nameField.clear();
         nameFolderField.clear();
         emailField.clear();
@@ -224,7 +235,16 @@ public class MainLayout implements Initializable {
             return;
         }
 
-        FolderManager.saveFolder(UserSession.getUserId(), name);
+        if (editingFolderId != null) {
+            if(FolderManager.updateFolder(editingFolderId, name)) {
+                System.out.println("Folder updated successfully.");
+            }
+        } else {
+            if(FolderManager.saveFolder(UserSession.getUserId(), name)) {
+                System.out.println("Folder saved successfully.");
+            }
+        }
+
         closeForm();
         loadInitialData();
     }
@@ -248,9 +268,13 @@ public class MainLayout implements Initializable {
         }
 
         if (editingAccountId != null) {
-            AccountManager.updateAccount(editingAccountId, name, colorHex, iconPath, email, password);
+            if(AccountManager.updateAccount(editingAccountId, name, colorHex, iconPath, email, password)) {
+                System.out.println("Account updated successfully.");
+            }
         } else {
-            AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password);
+            if(AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password)) {
+                System.out.println("Account saved successfully.");
+            }
         }
 
         closeForm();

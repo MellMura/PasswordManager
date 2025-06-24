@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class setUpDB {
+public class SetUpDB {
     public static void initializeDB() {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/", "root", "2509");
