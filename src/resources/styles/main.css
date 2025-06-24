@@ -136,3 +136,17 @@
 .icon-button:hover {
     -fx-background-color: rgba(0,0,0,0.05);
 }
+
+#topPassword {
+    -fx-background-color: #bcccca;
+    -fx-background-radius: 10px 10px 0 0;
+}
+
+#folderBackground {
+    -fx-background-color: #e0efed;
+    -fx-background-radius: 10;
+    -fx-border-color: #01bfa9;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-radius: 10;
+}
