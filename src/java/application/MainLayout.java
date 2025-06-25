@@ -15,7 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -57,6 +59,7 @@ public class MainLayout implements Initializable {
     private File selectedIconFile;
     private Integer editingAccountId = null;
     private Integer editingFolderId = null;
+    private Integer currentFolderId = 0;
 
     private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
     private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
@@ -200,13 +203,19 @@ public class MainLayout implements Initializable {
         tilePane.getChildren().clear();
         folderControllerMap.clear();
         accountControllerMap.clear();
-
+        String username = UserSession.getUsername();
+        if (username.endsWith("s")) {
+            usernameLabel.setText(username + "' passwords");
+        } else {
+            usernameLabel.setText(username + "'s passwords");
+        }
         renderSavedFolders(folders);
         renderSavedAccounts(accounts);
         colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
     public void loadFolderData(int folderId) {
+        this.currentFolderId = folderId;
         List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
 
         if (folderId == 0) {
@@ -230,6 +239,8 @@ public class MainLayout implements Initializable {
         accountControllerMap.clear();
 
         renderSavedAccounts(accounts);
+        StackPane backArrowCard = createBackArrowCard();
+        tilePane.getChildren().add(0, backArrowCard);
         colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
@@ -361,5 +372,48 @@ public class MainLayout implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    private StackPane createBackArrowCard() {
+        StackPane arrowCard = new StackPane();
+        arrowCard.getStyleClass().add("account-card");
+
+        ImageView arrowIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/reply-big.png")));
+        arrowIcon.setFitWidth(94);
+        arrowIcon.setFitHeight(94);
+
+        Button backButton = new Button();
+        backButton.setGraphic(arrowIcon);
+        backButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+        backButton.setOnAction(e -> loadInitialData());
+
+        arrowCard.setOnDragOver(event -> {
+            if (event.getGestureSource() != arrowCard && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        arrowCard.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasString()) {
+                try {
+                    int accountId = Integer.parseInt(db.getString());
+                    AccountManager.updateFolderId(accountId, 0);
+                    loadFolderData(currentFolderId);
+                    success = true;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        arrowCard.getChildren().add(backButton);
+        return arrowCard;
     }
 }
