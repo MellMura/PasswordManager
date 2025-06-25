@@ -140,5 +140,9 @@ public class FolderCard {
         deleteBtn.setPrefSize(38, 38);
         deleteBtn.setOnAction(e -> deleteFolder());
         deleteBtn.setAlignment(Pos.CENTER);
+
+        cardWrapper.setOnMouseClicked(e -> {
+            mainLayout.loadFolderData(currentModel.id);
+        });
     }
 }

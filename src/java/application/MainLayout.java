@@ -206,6 +206,33 @@ public class MainLayout implements Initializable {
         colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
+    public void loadFolderData(int folderId) {
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
+
+        if (folderId == 0) {
+            String username = UserSession.getUsername();
+            if (username.endsWith("s")) {
+                usernameLabel.setText(username + "' passwords");
+            } else {
+                usernameLabel.setText(username + "'s passwords");
+            }
+        } else {
+            FolderModel folder = FolderManager.getFolderById(folderId);
+            if (folder != null) {
+                usernameLabel.setText(folder.name);
+            } else {
+                usernameLabel.setText("Unknown Folder");
+            }
+        }
+
+        tilePane.getChildren().clear();
+        folderControllerMap.clear();
+        accountControllerMap.clear();
+
+        renderSavedAccounts(accounts);
+        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
+    }
+
     @FXML
     public void closeForm() {
         semiTransparent.setVisible(false);

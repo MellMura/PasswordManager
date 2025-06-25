@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +8,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FolderManager {
+
+    public static FolderModel getFolderById(int id) {
+        Connection connection = JDBC_Handler.connectDB();
+        if (connection != null) {
+            try {
+                String sql = "SELECT id, name FROM folders WHERE id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, id);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    return new FolderModel(resultSet.getInt("id"), resultSet.getString("name"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public static boolean saveFolder(int userId, String name) {
         Connection connection = JDBC_Handler.connectDB();
 
