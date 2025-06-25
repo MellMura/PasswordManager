@@ -195,7 +195,7 @@ public class MainLayout implements Initializable {
 
     public void loadInitialData() {
         List<FolderModel> folders = new FolderManager().fetchFolders();
-        List<AccountModel> accounts = new AccountManager().fetchAccounts();
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
 
         tilePane.getChildren().clear();
         folderControllerMap.clear();

@@ -153,15 +153,45 @@ public class AccountManager {
         }
     }
 
-    public List<AccountModel> fetchAccounts() {
+    public static boolean updateFolderId(int accountId, int folderId) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "UPDATE saved_accounts SET folder_id = ? WHERE id = ?";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, folderId);
+                preparedStatement.setInt(2, accountId);
+
+                int rowsUpdated = preparedStatement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    return true;
+                } else {
+                    System.out.println("Folder id updating failed.");
+                    return false;
+                }
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Database connection failed.");
+            return false;
+        }
+    }
+
+    public List<AccountModel> fetchAccounts(int folderId) {
         List<AccountModel> accounts = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
             try {
-                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? ORDER BY position ASC";
+                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? AND folder_id = ? ORDER BY position ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
+                preparedStatement.setInt(2, folderId);
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {

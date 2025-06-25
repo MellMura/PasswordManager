@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -21,6 +23,39 @@ public class FolderCard {
     private Button editButton;
     private Button deleteButton;
     private MainLayout mainLayout;
+
+    @FXML
+    public void initialize() {
+        cardWrapper.setOnDragOver(event -> {
+            if (event.getGestureSource() != cardWrapper && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        cardWrapper.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasString()) {
+                try {
+                    int accountId = Integer.parseInt(db.getString());
+                    int folderId = (Integer) cardWrapper.getUserData();
+
+                    AccountManager.updateFolderId(accountId, folderId);
+
+                    mainLayout.loadInitialData();
+
+                    success = true;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+    }
 
     private void showHoverButtons() {
         if (hoverButtons != null) {
