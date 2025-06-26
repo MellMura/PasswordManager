@@ -113,6 +113,34 @@ public class FolderManager {
         }
     }
 
+    public List<FolderModel> searchByName(String search) {
+        List<FolderModel> folders = new ArrayList<>();
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "SELECT id, name FROM folders WHERE user_id = ? AND name LIKE ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, UserSession.getUserId());
+                preparedStatement.setString(2, "%" + search + "%");
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    folders.add(new FolderModel(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name")
+                    ));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Database connection failed.");
+        }
+
+        return folders;
+    }
+
     public List<FolderModel> fetchFolders() {
         List<FolderModel> folders = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
@@ -122,12 +150,12 @@ public class FolderManager {
                 String sql = "SELECT id, name FROM folders WHERE user_id = ? ORDER BY name ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
-                ResultSet rs = preparedStatement.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                while (rs.next()) {
+                while (resultSet.next()) {
                     folders.add(new FolderModel(
-                            rs.getInt("id"),
-                            rs.getString("name")
+                            resultSet.getInt("id"),
+                            resultSet.getString("name")
                     ));
                 }
             } catch (SQLException e) {

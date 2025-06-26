@@ -51,6 +51,9 @@ public class MainLayout implements Initializable {
     @FXML private Button folderButton;
     @FXML private Button passwordButton;
     @FXML private Button addAccountButton;
+    @FXML private Button searchButton;
+    @FXML private TextField searchField;
+    @FXML private Button clearSearchButton;
     private boolean slideButtonsVisible = false;
 
     private boolean isHovering = false;
@@ -110,6 +113,12 @@ public class MainLayout implements Initializable {
             showSlideButtons();
         }
         slideButtonsVisible = !slideButtonsVisible;
+    }
+
+    @FXML
+    private void clearSearchField() {
+        searchField.clear();
+        loadInitialData();
     }
 
     @FXML
@@ -194,6 +203,10 @@ public class MainLayout implements Initializable {
         icon.setFitWidth(24);
         icon.setFitHeight(24);
         iconButton.setGraphic(icon);
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            performSearch(newValue);
+        });
     }
 
     public void loadInitialData() {
@@ -332,6 +345,18 @@ public class MainLayout implements Initializable {
             selectedIconFile = file;
             iconButton.setText(file.getName());
         }
+    }
+
+    public void performSearch(String query) {
+        List<FolderModel> folders = new FolderManager().searchByName(query);
+        List<AccountModel> accounts = new AccountManager().searchByName(query);
+
+        tilePane.getChildren().clear();
+        folderControllerMap.clear();
+        accountControllerMap.clear();
+
+        renderSavedFolders(folders);
+        renderSavedAccounts(accounts);
     }
 
     public void renderSavedFolders(List<FolderModel> folders) {

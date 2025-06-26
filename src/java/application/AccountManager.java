@@ -182,6 +182,45 @@ public class AccountManager {
         }
     }
 
+    public List<AccountModel> searchByName(String search) {
+        List<AccountModel> accounts = new ArrayList<>();
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? AND name LIKE ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, UserSession.getUserId());
+                preparedStatement.setString(2, "%" + search + "%");
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    try{
+                        String decryptedPassword = EncryptionHandler.decrypt(resultSet.getString("password"));
+                        accounts.add(new AccountModel(
+                                resultSet.getInt("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("email"),
+                                decryptedPassword,
+                                resultSet.getString("icon_url"),
+                                resultSet.getString("color")
+                        ));
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Password decryption failed.");
+                    }
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Database connection failed.");
+        }
+
+        return accounts;
+    }
+
     public List<AccountModel> fetchAccounts(int folderId) {
         List<AccountModel> accounts = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
@@ -192,18 +231,18 @@ public class AccountManager {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
                 preparedStatement.setInt(2, folderId);
-                ResultSet rs = preparedStatement.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                while (rs.next()) {
+                while (resultSet.next()) {
                     try{
-                        String decryptedPassword = EncryptionHandler.decrypt(rs.getString("password"));
+                        String decryptedPassword = EncryptionHandler.decrypt(resultSet.getString("password"));
                         accounts.add(new AccountModel(
-                                rs.getInt("id"),
-                                rs.getString("name"),
-                                rs.getString("email"),
+                                resultSet.getInt("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("email"),
                                 decryptedPassword,
-                                rs.getString("icon_url"),
-                                rs.getString("color")
+                                resultSet.getString("icon_url"),
+                                resultSet.getString("color")
                         ));
                     } catch (Exception e){
                         e.printStackTrace();

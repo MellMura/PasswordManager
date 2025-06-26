@@ -21,11 +21,15 @@
 }
 
 
-#tilePane {
+#baseWrapper {
     -fx-background-color: white;
     -fx-background-radius: 10px 10px 0 0;
+}
+
+#tilePane {
     -fx-padding: 30px;
 }
+
 #footer {
     -fx-background-color: white;
     -fx-background-radius: 0 0 10px 10px;
@@ -162,4 +166,8 @@
     -fx-border-width: 3px;
     -fx-border-style: solid;
     -fx-border-radius: 10;
+}
+
+#search {
+    -fx-padding: 10px;
 }

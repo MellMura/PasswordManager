@@ -27,7 +27,14 @@
             </HBox>
             <StackPane fx:id="stack" VBox.vgrow="ALWAYS">
                <children>
-                  <TilePane fx:id="tilePane" hgap="10.0" vgap="15.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="baseWrapper" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <HBox fx:id="search" spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 5 10 0 10;">
+                        <Button fx:id="searchButton" />
+                        <TextField fx:id="searchField" promptText="Search..." prefWidth="200"/>
+                        <Button fx:id="clearSearchButton" text="✕" onAction="#clearSearchField" />
+                     </HBox>
+                     <TilePane fx:id="tilePane" hgap="10.0" vgap="15.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+                  </VBox>
                   <Pane fx:id="semiTransparent"
                         pickOnBounds="true"
                         visible="false"
