@@ -14,6 +14,8 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="mainWrapper" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainLayout">
    <children>
       <VBox fx:id="verticalBox" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -28,10 +30,18 @@
             <StackPane fx:id="stack" VBox.vgrow="ALWAYS">
                <children>
                   <VBox fx:id="baseWrapper" spacing="10.0" VBox.vgrow="ALWAYS">
-                     <HBox fx:id="search" spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 5 10 0 10;">
-                        <Button fx:id="searchButton" />
+                     <HBox fx:id="search" spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 10 10 0 10;">
+                        <Button fx:id="searchButton" onAction="#toggleSearchField">
+                           <graphic>
+                              <ImageView fitWidth="20" fitHeight="20">
+                                 <image>
+                                    <Image url="@/icons/search.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                         <TextField fx:id="searchField" promptText="Search..." prefWidth="200"/>
-                        <Button fx:id="clearSearchButton" text="✕" onAction="#clearSearchField" />
+                        <Button fx:id="clearSearchButton" text="✕" onAction="#clearSearchField"/>
                      </HBox>
                      <TilePane fx:id="tilePane" hgap="10.0" vgap="15.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
                   </VBox>

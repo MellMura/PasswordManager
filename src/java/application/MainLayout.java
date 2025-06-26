@@ -116,6 +116,68 @@ public class MainLayout implements Initializable {
     }
 
     @FXML
+    private void showSearchField(){
+        searchField.setVisible(true);
+        searchField.setManaged(true);
+        clearSearchButton.setVisible(true);
+        clearSearchButton.setManaged(true);
+
+        searchField.setOpacity(0);
+        searchField.setTranslateX(-20);
+        clearSearchButton.setOpacity(0);
+        clearSearchButton.setTranslateX(-20);
+
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(200), searchField);
+        slideIn.setToX(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), searchField);
+        fadeIn.setToValue(1);
+
+        TranslateTransition clearSlideIn = new TranslateTransition(Duration.millis(200), clearSearchButton);
+        clearSlideIn.setToX(0);
+        FadeTransition clearFadeIn = new FadeTransition(Duration.millis(200), clearSearchButton);
+        clearFadeIn.setToValue(1);
+
+        new ParallelTransition(slideIn, fadeIn, clearSlideIn, clearFadeIn).play();
+
+        searchField.requestFocus();
+    }
+
+    @FXML
+    private void hideSearchField(){
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(200), searchField);
+        slideOut.setToX(-20);
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), searchField);
+        fadeOut.setToValue(0);
+
+        TranslateTransition clearSlideOut = new TranslateTransition(Duration.millis(200), clearSearchButton);
+        clearSlideOut.setToX(-20);
+        FadeTransition clearFadeOut = new FadeTransition(Duration.millis(200), clearSearchButton);
+        clearFadeOut.setToValue(0);
+
+        ParallelTransition hideTransition = new ParallelTransition(slideOut, fadeOut, clearSlideOut, clearFadeOut);
+        hideTransition.setOnFinished(event -> {
+            searchField.clear();
+            searchField.setVisible(false);
+            searchField.setManaged(false);
+            clearSearchButton.setVisible(false);
+            clearSearchButton.setManaged(false);
+            loadInitialData();
+        });
+
+        hideTransition.play();
+    }
+
+    @FXML
+    private void toggleSearchField() {
+        boolean currentlyVisible = searchField.isVisible();
+        if (currentlyVisible) {
+            hideSearchField();
+        } else {
+            showSearchField();
+        }
+    }
+
+    @FXML
     private void clearSearchField() {
         searchField.clear();
         loadInitialData();
@@ -203,6 +265,11 @@ public class MainLayout implements Initializable {
         icon.setFitWidth(24);
         icon.setFitHeight(24);
         iconButton.setGraphic(icon);
+
+        searchField.setVisible(false);
+        searchField.setManaged(false);
+        clearSearchButton.setVisible(false);
+        clearSearchButton.setManaged(false);
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             performSearch(newValue);

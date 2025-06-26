@@ -171,3 +171,8 @@
 #search {
     -fx-padding: 10px;
 }
+
+#searchButton {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
