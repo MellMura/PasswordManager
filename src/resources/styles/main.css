@@ -23,7 +23,8 @@
 
 #baseWrapper {
     -fx-background-color: white;
-    -fx-background-radius: 10px 10px 0 0;
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10;
 }
 
 #tilePane {
@@ -31,7 +32,7 @@
 }
 
 #footer {
-    -fx-background-color: white;
+    -fx-background-color: transparent;
     -fx-background-radius: 0 0 10px 10px;
     -fx-padding: 5px;
     -fx-min-height: 70px;
@@ -201,4 +202,38 @@
     -fx-font-weight: bold;
     -fx-font-size: 17px;
     -fx-text-fill: #01bfa9;;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 4px;
+    -fx-background-color: white;
+    -fx-background-insets: 15 0;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #b0b0b0;
+    -fx-background-insets: 3 0;
+    -fx-background-radius: 2px;
+}
+
+.scroll-bar .track {
+    -fx-background-color: white;
+}
+
+.scroll-pane:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: 0;
 }

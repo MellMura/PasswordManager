@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.control.ScrollPane?>
 <AnchorPane fx:id="mainWrapper" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainLayout">
    <children>
       <VBox fx:id="verticalBox" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -49,7 +50,12 @@
                            </Button>
                         </HBox>
                      </HBox>
-                     <TilePane fx:id="tilePane" hgap="10.0" vgap="15.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
+
+                     <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <content>
+                           <TilePane fx:id="tilePane" hgap="10.0" vgap="15.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;"/>
+                        </content>
+                     </ScrollPane>
                   </VBox>
                   <Pane fx:id="semiTransparent"
                         pickOnBounds="true"
@@ -105,20 +111,17 @@
                   </StackPane>
                   <Pane fx:id="hoverOverlay" pickOnBounds="false" />
 
-               </children>
-            </StackPane>
-            <HBox fx:id="footer" alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="600.0">
-               <children>
-                  <HBox fx:id="slidingButtonBox" alignment="CENTER_RIGHT" style="-fx-padding: 5;">
-
-                  <children>
+                  <HBox fx:id="footer" alignment="CENTER_RIGHT"
+                        maxHeight="70" prefHeight="70"
+                        StackPane.alignment="BOTTOM_RIGHT">
+                     <HBox fx:id="slidingButtonBox" alignment="CENTER_RIGHT">
                         <Button fx:id="folderButton" onAction="#addFolder" opacity="0"/>
                         <Button fx:id="passwordButton" onAction="#addAccount" opacity="0"/>
-                        <Button fx:id="addAccountButton" onAction="#toggleSlideButtons" text="+"/>
-                     </children>
+                        <Button fx:id="addAccountButton" text="+" onAction="#toggleSlideButtons"/>
+                     </HBox>
                   </HBox>
                </children>
-            </HBox>
+            </StackPane>
          </children>
       </VBox>
    </children>
