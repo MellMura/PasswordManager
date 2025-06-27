@@ -31,10 +31,7 @@
                <children>
                   <VBox fx:id="baseWrapper" spacing="10.0" VBox.vgrow="ALWAYS">
                      <HBox fx:id="search" spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 10 10 0 10;">
-                        <HBox fx:id="breadcrumbBox" spacing="5" alignment="CENTER_LEFT">
-                           <Label text="Home" />
-
-                        </HBox>
+                        <HBox fx:id="breadcrumbBox" spacing="5" alignment="CENTER_LEFT" />
 
                         <Region HBox.hgrow="ALWAYS"/>
 

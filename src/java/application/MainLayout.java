@@ -31,9 +31,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainLayout implements Initializable {
-    @FXML private SubScene passwordSubScene;
-    @FXML private SubScene folderSubScene;
-
     @FXML private StackPane passwordSubSceneWrapper;
     @FXML private StackPane folderSubSceneWrapper;
     @FXML private TextField nameField;
@@ -51,13 +48,10 @@ public class MainLayout implements Initializable {
     @FXML private Button folderButton;
     @FXML private Button passwordButton;
     @FXML private Button addAccountButton;
-    @FXML private Button searchButton;
     @FXML private TextField searchField;
     @FXML private Button clearSearchButton;
+    @FXML private HBox breadcrumbBox;
     private boolean slideButtonsVisible = false;
-
-    private boolean isHovering = false;
-    private javafx.animation.PauseTransition hideDelay;
 
     private File selectedIconFile;
     private Integer editingAccountId = null;
@@ -69,6 +63,132 @@ public class MainLayout implements Initializable {
 
     public Pane getHoverLayer() {
         return hoverOverlay;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        loadInitialData();
+
+        javafx.application.Platform.runLater(() -> {
+            String css = getClass().getResource("/styles/main.css").toExternalForm();
+            tilePane.getScene().getStylesheets().add(css);
+
+            tilePane.getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                Node target = event.getPickResult().getIntersectedNode();
+                if (slideButtonsVisible &&
+                        target != addAccountButton &&
+                        !slidingButtonBox.getChildren().contains(target)) {
+                    hideSlideButtons();
+                    slideButtonsVisible = false;
+                }
+            });
+        });
+
+        String username = UserSession.getUsername();
+        if (username.endsWith("s")) {
+            usernameLabel.setText(username + "' passwords");
+        } else {
+            usernameLabel.setText(username + "'s passwords");
+        }
+
+        ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
+        passwordIcon.setFitWidth(18);
+        passwordIcon.setFitHeight(18);
+        passwordButton.setGraphic(passwordIcon);
+
+        ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
+        folderIcon.setFitWidth(18);
+        folderIcon.setFitHeight(18);
+        folderButton.setGraphic(folderIcon);
+
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/add-image.png")));
+        icon.setFitWidth(24);
+        icon.setFitHeight(24);
+        iconButton.setGraphic(icon);
+
+        searchField.setVisible(false);
+        searchField.setManaged(false);
+        clearSearchButton.setVisible(false);
+        clearSearchButton.setManaged(false);
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            performSearch(newValue);
+        });
+    }
+
+    public void loadInitialData() {
+        List<FolderModel> folders = new FolderManager().fetchFolders();
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
+        currentFolderId = 0;
+        updateBreadcrumbs();
+
+        tilePane.getChildren().clear();
+        folderControllerMap.clear();
+        accountControllerMap.clear();
+        String username = UserSession.getUsername();
+        if (username.endsWith("s")) {
+            usernameLabel.setText(username + "' passwords");
+        } else {
+            usernameLabel.setText(username + "'s passwords");
+        }
+        renderSavedFolders(folders);
+        renderSavedAccounts(accounts);
+        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
+    }
+
+    public void loadFolderData(int folderId) {
+        this.currentFolderId = folderId;
+        updateBreadcrumbs();
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
+
+        if (folderId == 0) {
+            String username = UserSession.getUsername();
+            if (username.endsWith("s")) {
+                usernameLabel.setText(username + "' passwords");
+            } else {
+                usernameLabel.setText(username + "'s passwords");
+            }
+        } else {
+            FolderModel folder = FolderManager.getFolderById(folderId);
+            if (folder != null) {
+                usernameLabel.setText(folder.name);
+            } else {
+                usernameLabel.setText("Unknown Folder");
+            }
+        }
+
+        tilePane.getChildren().clear();
+        folderControllerMap.clear();
+        accountControllerMap.clear();
+
+        renderSavedAccounts(accounts);
+        StackPane backArrowCard = createBackArrowCard();
+        tilePane.getChildren().add(0, backArrowCard);
+        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
+    }
+
+    private void updateBreadcrumbs() {
+        breadcrumbBox.getChildren().clear();
+
+        Label home = new Label("Home");
+        home.getStyleClass().add("breadcrumb");
+        home.setOnMouseClicked(e -> loadInitialData());
+
+        breadcrumbBox.getChildren().add(home);
+
+        if (currentFolderId != 0) {
+            Label separator = new Label(" › ");
+            separator.getStyleClass().add("breadcrumb-separator");
+            breadcrumbBox.getChildren().add(separator);
+
+            FolderModel folder = FolderManager.getFolderById(currentFolderId);
+
+            if (folder != null) {
+                Label current = new Label(folder.name);
+                current.getStyleClass().add("breadcrumb");
+                breadcrumbBox.getChildren().add(current);
+            }
+        }
     }
 
     private void showSlideButtons() {
@@ -225,104 +345,7 @@ public class MainLayout implements Initializable {
         folderSubSceneWrapper.setVisible(true);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        loadInitialData();
 
-        javafx.application.Platform.runLater(() -> {
-            String css = getClass().getResource("/styles/main.css").toExternalForm();
-            tilePane.getScene().getStylesheets().add(css);
-
-            tilePane.getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-                Node target = event.getPickResult().getIntersectedNode();
-                if (slideButtonsVisible &&
-                        target != addAccountButton &&
-                        !slidingButtonBox.getChildren().contains(target)) {
-                    hideSlideButtons();
-                    slideButtonsVisible = false;
-                }
-            });
-        });
-
-        String username = UserSession.getUsername();
-        if (username.endsWith("s")) {
-            usernameLabel.setText(username + "' passwords");
-        } else {
-            usernameLabel.setText(username + "'s passwords");
-        }
-
-        ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
-        passwordIcon.setFitWidth(18);
-        passwordIcon.setFitHeight(18);
-        passwordButton.setGraphic(passwordIcon);
-
-        ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
-        folderIcon.setFitWidth(18);
-        folderIcon.setFitHeight(18);
-        folderButton.setGraphic(folderIcon);
-
-        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/add-image.png")));
-        icon.setFitWidth(24);
-        icon.setFitHeight(24);
-        iconButton.setGraphic(icon);
-
-        searchField.setVisible(false);
-        searchField.setManaged(false);
-        clearSearchButton.setVisible(false);
-        clearSearchButton.setManaged(false);
-
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            performSearch(newValue);
-        });
-    }
-
-    public void loadInitialData() {
-        List<FolderModel> folders = new FolderManager().fetchFolders();
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
-
-        tilePane.getChildren().clear();
-        folderControllerMap.clear();
-        accountControllerMap.clear();
-        String username = UserSession.getUsername();
-        if (username.endsWith("s")) {
-            usernameLabel.setText(username + "' passwords");
-        } else {
-            usernameLabel.setText(username + "'s passwords");
-        }
-        renderSavedFolders(folders);
-        renderSavedAccounts(accounts);
-        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
-    }
-
-    public void loadFolderData(int folderId) {
-        this.currentFolderId = folderId;
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
-
-        if (folderId == 0) {
-            String username = UserSession.getUsername();
-            if (username.endsWith("s")) {
-                usernameLabel.setText(username + "' passwords");
-            } else {
-                usernameLabel.setText(username + "'s passwords");
-            }
-        } else {
-            FolderModel folder = FolderManager.getFolderById(folderId);
-            if (folder != null) {
-                usernameLabel.setText(folder.name);
-            } else {
-                usernameLabel.setText("Unknown Folder");
-            }
-        }
-
-        tilePane.getChildren().clear();
-        folderControllerMap.clear();
-        accountControllerMap.clear();
-
-        renderSavedAccounts(accounts);
-        StackPane backArrowCard = createBackArrowCard();
-        tilePane.getChildren().add(0, backArrowCard);
-        colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
-    }
 
     @FXML
     public void closeForm() {
