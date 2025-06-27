@@ -177,7 +177,7 @@ public class MainLayout implements Initializable {
         breadcrumbBox.getChildren().add(home);
 
         if (currentFolderId != 0) {
-            Label separator = new Label(" › ");
+            Label separator = new Label(">");
             separator.getStyleClass().add("breadcrumb-separator");
             breadcrumbBox.getChildren().add(separator);
 
@@ -281,7 +281,6 @@ public class MainLayout implements Initializable {
             searchField.setManaged(false);
             clearSearchButton.setVisible(false);
             clearSearchButton.setManaged(false);
-            loadInitialData();
         });
 
         hideTransition.play();

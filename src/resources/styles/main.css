@@ -176,3 +176,29 @@
     -fx-background-color: transparent;
     -fx-cursor: hand;
 }
+
+#clearSearchButton {
+    -fx-text-fill: #9d9d9d;
+    -fx-font-size: 15px;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.breadcrumb {
+    -fx-text-fill: #9d9d9d;
+    -fx-font-size: 15px;
+    -fx-padding: 10px;
+    -fx-font-weight: bold;
+}
+
+.breadcrumb:hover {
+    -fx-background-color: rgba(0,0,0,0.05);
+    -fx-background-radius: 10;
+}
+
+.breadcrumb-separator {
+    -fx-font-weight: bold;
+    -fx-font-size: 17px;
+    -fx-text-fill: #01bfa9;;
+}

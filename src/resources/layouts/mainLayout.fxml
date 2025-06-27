@@ -31,7 +31,7 @@
                <children>
                   <VBox fx:id="baseWrapper" spacing="10.0" VBox.vgrow="ALWAYS">
                      <HBox fx:id="search" spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 10 10 0 10;">
-                        <HBox fx:id="breadcrumbBox" spacing="5" alignment="CENTER_LEFT" />
+                        <HBox fx:id="breadcrumbBox" spacing="2" alignment="CENTER_LEFT" />
 
                         <Region HBox.hgrow="ALWAYS"/>
 
@@ -40,7 +40,7 @@
                            <TextField fx:id="searchField" promptText="Search..." prefWidth="200"/>
                            <Button fx:id="searchButton" onAction="#toggleSearchField">
                               <graphic>
-                                 <ImageView fitWidth="20" fitHeight="20">
+                                 <ImageView fitWidth="25" fitHeight="25">
                                     <image>
                                        <Image url="@/icons/search.png" />
                                     </image>
