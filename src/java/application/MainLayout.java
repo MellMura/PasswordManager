@@ -123,9 +123,9 @@ public class MainLayout implements Initializable {
         clearSearchButton.setManaged(true);
 
         searchField.setOpacity(0);
-        searchField.setTranslateX(-20);
+        searchField.setTranslateX(20);
         clearSearchButton.setOpacity(0);
-        clearSearchButton.setTranslateX(-20);
+        clearSearchButton.setTranslateX(20);
 
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(200), searchField);
         slideIn.setToX(0);
@@ -145,12 +145,12 @@ public class MainLayout implements Initializable {
     @FXML
     private void hideSearchField(){
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(200), searchField);
-        slideOut.setToX(-20);
+        slideOut.setToX(20);
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), searchField);
         fadeOut.setToValue(0);
 
         TranslateTransition clearSlideOut = new TranslateTransition(Duration.millis(200), clearSearchButton);
-        clearSlideOut.setToX(-20);
+        clearSlideOut.setToX(20);
         FadeTransition clearFadeOut = new FadeTransition(Duration.millis(200), clearSearchButton);
         clearFadeOut.setToValue(0);
 
