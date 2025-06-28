@@ -412,13 +412,18 @@ public class MainLayout implements Initializable {
                 System.out.println("Account updated successfully.");
             }
         } else {
-            if(AccountManager.saveAccount(UserSession.getUserId(), name, colorHex, iconPath, email, password)) {
+            if(AccountManager.saveAccount(UserSession.getUserId(), currentFolderId, name, colorHex, iconPath, email, password)) {
                 System.out.println("Account saved successfully.");
             }
         }
 
         closeForm();
-        loadInitialData();
+        if(currentFolderId != 0) {
+            loadFolderData(currentFolderId);
+        }
+        else {
+            loadInitialData();
+        }
     }
 
     @FXML

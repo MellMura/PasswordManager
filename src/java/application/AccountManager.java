@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AccountManager {
 
-    public static boolean saveAccount(int userId, String name, String colorHex, String iconPath, String email, String password) {
+    public static boolean saveAccount(int userId, int folderId, String name, String colorHex, String iconPath, String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -39,7 +39,7 @@ public class AccountManager {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, userId);
-                preparedStatement.setInt(2, 0); // default folder
+                preparedStatement.setInt(2, folderId);
                 preparedStatement.setString(3, name);
                 preparedStatement.setString(4, email);
                 preparedStatement.setString(5, encryptedPassword);
