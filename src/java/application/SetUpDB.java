@@ -58,6 +58,7 @@ public class SetUpDB {
                     "CREATE TABLE IF NOT EXISTS folders (" +
                             "id INT PRIMARY KEY AUTO_INCREMENT, " +
                             "user_id INT NOT NULL, " +
+                            "folder_id INT, " +
                             "name VARCHAR(30) NOT NULL UNIQUE " +
                             ")"
             );

@@ -28,17 +28,18 @@ public class FolderManager {
         return null;
     }
 
-    public static boolean saveFolder(int userId, String name) {
+    public static boolean saveFolder(int userId, int folderId, String name) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
             try {
-                String sql = "INSERT INTO folders (user_id, name) " +
-                        "VALUES (?, ?)";
+                String sql = "INSERT INTO folders (user_id, folder_id, name) " +
+                        "VALUES (?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, userId);
-                preparedStatement.setString(2, name);
+                preparedStatement.setInt(2, folderId);
+                preparedStatement.setString(3, name);
 
                 int rowsInserted = preparedStatement.executeUpdate();
 
@@ -141,15 +142,16 @@ public class FolderManager {
         return folders;
     }
 
-    public List<FolderModel> fetchFolders() {
+    public List<FolderModel> fetchFolders(int folderId) {
         List<FolderModel> folders = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
             try {
-                String sql = "SELECT id, name FROM folders WHERE user_id = ? ORDER BY name ASC";
+                String sql = "SELECT id, name FROM folders WHERE user_id = ? AND folder_id = ? ORDER BY name ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
+                preparedStatement.setInt(2, folderId);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {

@@ -117,8 +117,8 @@ public class MainLayout implements Initializable {
     }
 
     public void loadInitialData() {
-        List<FolderModel> folders = new FolderManager().fetchFolders();
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
+        List<FolderModel> folders = new FolderManager().fetchFolders(currentFolderId);
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(currentFolderId);
         currentFolderId = 0;
         updateBreadcrumbs();
 
@@ -139,6 +139,7 @@ public class MainLayout implements Initializable {
     public void loadFolderData(int folderId) {
         this.currentFolderId = folderId;
         updateBreadcrumbs();
+        List<FolderModel> folders = new FolderManager().fetchFolders(folderId);
         List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
 
         if (folderId == 0) {
@@ -161,6 +162,7 @@ public class MainLayout implements Initializable {
         folderControllerMap.clear();
         accountControllerMap.clear();
 
+        renderSavedFolders(folders);
         renderSavedAccounts(accounts);
         StackPane backArrowCard = createBackArrowCard();
         tilePane.getChildren().add(0, backArrowCard);
@@ -380,13 +382,18 @@ public class MainLayout implements Initializable {
                 System.out.println("Folder updated successfully.");
             }
         } else {
-            if(FolderManager.saveFolder(UserSession.getUserId(), name)) {
+            if(FolderManager.saveFolder(UserSession.getUserId(), currentFolderId, name)) {
                 System.out.println("Folder saved successfully.");
             }
         }
 
         closeForm();
-        loadInitialData();
+        if(currentFolderId != 0) {
+            loadFolderData(currentFolderId);
+        }
+        else {
+            loadInitialData();
+        }
     }
 
     @FXML
