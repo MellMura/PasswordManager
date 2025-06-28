@@ -117,8 +117,8 @@ public class MainLayout implements Initializable {
     }
 
     public void loadInitialData() {
-        List<FolderModel> folders = new FolderManager().fetchFolders(currentFolderId);
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(currentFolderId);
+        List<FolderModel> folders = new FolderManager().fetchFolders(0);
+        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
         currentFolderId = 0;
         updateBreadcrumbs();
 
@@ -470,7 +470,7 @@ public class MainLayout implements Initializable {
                 folderControllerMap.put(folder, controller);
                 folder.setUserData(fold.id);
                 folder.getStyleClass().add("folder-card");
-                controller.setData(fold.id, fold.name);
+                controller.setData(fold.id, fold.folder_id, fold.name);
                 StackPane cardWrapper = new StackPane();
                 cardWrapper.getChildren().add(folder);
                 tilePane.getChildren().add(cardWrapper);
@@ -511,7 +511,21 @@ public class MainLayout implements Initializable {
         Button backButton = new Button();
         backButton.setGraphic(arrowIcon);
         backButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
-        backButton.setOnAction(e -> loadInitialData());
+        backButton.setOnAction(e -> {
+            FolderModel current = FolderManager.getFolderById(currentFolderId);
+
+            if (current != null) {
+                int parentId = current.folder_id;
+
+                if (parentId != 0) {
+                    loadFolderData(parentId);
+                } else {
+                    loadInitialData();
+                }
+            } else {
+                loadInitialData(); // fallback
+            }
+        });
 
         arrowCard.setOnDragOver(event -> {
             if (event.getGestureSource() != arrowCard && event.getDragboard().hasString()) {

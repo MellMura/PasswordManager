@@ -13,13 +13,13 @@ public class FolderManager {
         Connection connection = JDBC_Handler.connectDB();
         if (connection != null) {
             try {
-                String sql = "SELECT id, name FROM folders WHERE id = ?";
+                String sql = "SELECT id, folder_id, name FROM folders WHERE id = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    return new FolderModel(resultSet.getInt("id"), resultSet.getString("name"));
+                    return new FolderModel(resultSet.getInt("id"), resultSet.getInt("folder_id"), resultSet.getString("name"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -120,7 +120,7 @@ public class FolderManager {
 
         if (connection != null) {
             try {
-                String sql = "SELECT id, name FROM folders WHERE user_id = ? AND name LIKE ?";
+                String sql = "SELECT id, folder_id, name FROM folders WHERE user_id = ? AND name LIKE ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
                 preparedStatement.setString(2, "%" + search + "%");
@@ -129,6 +129,7 @@ public class FolderManager {
                 while (resultSet.next()) {
                     folders.add(new FolderModel(
                             resultSet.getInt("id"),
+                            resultSet.getInt("folderId"),
                             resultSet.getString("name")
                     ));
                 }
@@ -148,7 +149,7 @@ public class FolderManager {
 
         if (connection != null) {
             try {
-                String sql = "SELECT id, name FROM folders WHERE user_id = ? AND folder_id = ? ORDER BY name ASC";
+                String sql = "SELECT id, folder_id, name FROM folders WHERE user_id = ? AND folder_id = ? ORDER BY name ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
                 preparedStatement.setInt(2, folderId);
@@ -157,6 +158,7 @@ public class FolderManager {
                 while (resultSet.next()) {
                     folders.add(new FolderModel(
                             resultSet.getInt("id"),
+                            resultSet.getInt("folder_id"),
                             resultSet.getString("name")
                     ));
                 }

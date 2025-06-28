@@ -99,8 +99,8 @@ public class FolderCard {
         }
     }
 
-    public void setData(int id, String name) {
-        currentModel = new FolderModel(id, name);
+    public void setData(int id, int folder_id, String name) {
+        currentModel = new FolderModel(id, folder_id, name);
         hoverButtons = new VBox(5);
         hoverButtons.setVisible(false);
         hoverButtons.setOpacity(0);
