@@ -129,7 +129,7 @@ public class FolderManager {
                 while (resultSet.next()) {
                     folders.add(new FolderModel(
                             resultSet.getInt("id"),
-                            resultSet.getInt("folderId"),
+                            resultSet.getInt("folder_id"),
                             resultSet.getString("name")
                     ));
                 }
