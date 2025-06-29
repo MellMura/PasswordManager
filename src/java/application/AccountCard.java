@@ -42,10 +42,14 @@ public class AccountCard {
     private MainLayout mainLayout;
 
     private AccountModel currentModel;
+    private FolderModel currentFolderModel;
 
     private String originalPassword;
     private boolean isPasswordVisible = false;
 
+    public void setCurrentFolderModel(FolderModel folderModel) {
+        this.currentFolderModel = folderModel;
+    }
 
     @FXML
     public void initialize() {
@@ -333,7 +337,7 @@ public class AccountCard {
         String name = nameLabel.getText();
         boolean success = AccountManager.removeAccount(name);
         if (success) {
-            mainLayout.loadInitialData();
+            mainLayout.loadFolderData(currentFolderModel.id);
         }
     }
 

@@ -57,6 +57,7 @@ public class MainLayout implements Initializable {
     private Integer editingAccountId = null;
     private Integer editingFolderId = null;
     private Integer currentFolderId = 0;
+    private FolderModel currentFolderModel;
 
     private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
     private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
@@ -150,9 +151,9 @@ public class MainLayout implements Initializable {
                 usernameLabel.setText(username + "'s passwords");
             }
         } else {
-            FolderModel folder = FolderManager.getFolderById(folderId);
-            if (folder != null) {
-                usernameLabel.setText(folder.name);
+            currentFolderModel = FolderManager.getFolderById(folderId);
+            if (currentFolderModel != null) {
+                usernameLabel.setText(currentFolderModel.name);
             } else {
                 usernameLabel.setText("Unknown Folder");
             }
@@ -489,6 +490,7 @@ public class MainLayout implements Initializable {
                 controller.setMainLayout(this);
                 accountControllerMap.put(card, controller);
                 card.setUserData(acc.id);
+                controller.setCurrentFolderModel(currentFolderModel);
                 card.getStyleClass().add("account-card");
                 controller.setData(acc.id, acc.name, acc.email, acc.password, acc.iconUrl, acc.color);
                 StackPane cardWrapper = new StackPane();

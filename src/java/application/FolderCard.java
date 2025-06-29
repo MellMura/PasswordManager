@@ -95,7 +95,7 @@ public class FolderCard {
         String name = nameFolderLabel.getText();
         boolean success = FolderManager.removeFolder(name);
         if (success) {
-            mainLayout.loadInitialData();
+            mainLayout.loadFolderData(currentModel.folder_id);
         }
     }
 
