@@ -170,6 +170,18 @@ public class MainLayout implements Initializable {
         colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
+    private List<FolderModel> buildFolderPath(int folderId) {
+        List<FolderModel> path = new java.util.ArrayList<>();
+        FolderModel folder = FolderManager.getFolderById(folderId);
+
+        while (folder != null && folder.id != 0) {
+            path.add(0, folder);
+            folder = FolderManager.getFolderById(folder.folder_id);
+        }
+
+        return path;
+    }
+
     private void updateBreadcrumbs() {
         breadcrumbBox.getChildren().clear();
 
@@ -180,16 +192,17 @@ public class MainLayout implements Initializable {
         breadcrumbBox.getChildren().add(home);
 
         if (currentFolderId != 0) {
-            Label separator = new Label(">");
-            separator.getStyleClass().add("breadcrumb-separator");
-            breadcrumbBox.getChildren().add(separator);
+            List<FolderModel> path = buildFolderPath(currentFolderId);
 
-            FolderModel folder = FolderManager.getFolderById(currentFolderId);
+            for (FolderModel folder : path) {
+                Label separator = new Label(">");
+                separator.getStyleClass().add("breadcrumb-separator");
+                breadcrumbBox.getChildren().add(separator);
 
-            if (folder != null) {
-                Label current = new Label(folder.name);
-                current.getStyleClass().add("breadcrumb");
-                breadcrumbBox.getChildren().add(current);
+                Label folderLabel = new Label(folder.name);
+                folderLabel.getStyleClass().add("breadcrumb");
+                folderLabel.setOnMouseClicked(e -> loadFolderData(folder.id));
+                breadcrumbBox.getChildren().add(folderLabel);
             }
         }
     }
