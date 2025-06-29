@@ -1,14 +1,18 @@
-package application;
+package application.controllers;
 
+import application.managers.AccountManager;
+import application.models.Account;
+import application.managers.FolderManager;
+import application.models.Folder;
+import application.models.UserSession;
+import application.utils.FileSaver;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -57,7 +61,7 @@ public class MainLayout implements Initializable {
     private Integer editingAccountId = null;
     private Integer editingFolderId = null;
     private Integer currentFolderId = 0;
-    private FolderModel currentFolderModel;
+    private Folder currentFolderModel;
 
     private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
     private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
@@ -118,8 +122,8 @@ public class MainLayout implements Initializable {
     }
 
     public void loadInitialData() {
-        List<FolderModel> folders = new FolderManager().fetchFolders(0);
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(0);
+        List<Folder> folders = new FolderManager().fetchFolders(0);
+        List<Account> accounts = new AccountManager().fetchAccounts(0);
         currentFolderId = 0;
         updateBreadcrumbs();
 
@@ -140,8 +144,8 @@ public class MainLayout implements Initializable {
     public void loadFolderData(int folderId) {
         this.currentFolderId = folderId;
         updateBreadcrumbs();
-        List<FolderModel> folders = new FolderManager().fetchFolders(folderId);
-        List<AccountModel> accounts = new AccountManager().fetchAccounts(folderId);
+        List<Folder> folders = new FolderManager().fetchFolders(folderId);
+        List<Account> accounts = new AccountManager().fetchAccounts(folderId);
 
         if (folderId == 0) {
             String username = UserSession.getUsername();
@@ -170,9 +174,9 @@ public class MainLayout implements Initializable {
         colorPicker.setValue(javafx.scene.paint.Color.web("#84e8d4"));
     }
 
-    private List<FolderModel> buildFolderPath(int folderId) {
-        List<FolderModel> path = new java.util.ArrayList<>();
-        FolderModel folder = FolderManager.getFolderById(folderId);
+    private List<Folder> buildFolderPath(int folderId) {
+        List<Folder> path = new java.util.ArrayList<>();
+        Folder folder = FolderManager.getFolderById(folderId);
 
         while (folder != null && folder.id != 0) {
             path.add(0, folder);
@@ -192,9 +196,9 @@ public class MainLayout implements Initializable {
         breadcrumbBox.getChildren().add(home);
 
         if (currentFolderId != 0) {
-            List<FolderModel> path = buildFolderPath(currentFolderId);
+            List<Folder> path = buildFolderPath(currentFolderId);
 
-            for (FolderModel folder : path) {
+            for (Folder folder : path) {
                 Label separator = new Label(">");
                 separator.getStyleClass().add("breadcrumb-separator");
                 breadcrumbBox.getChildren().add(separator);
@@ -331,7 +335,7 @@ public class MainLayout implements Initializable {
     }
 
     @FXML
-    public void editAccount(AccountModel account) {
+    public void editAccount(Account account) {
         semiTransparent.setVisible(true);
         saveAccountButton.setText("Update");
         nameField.setText(account.name);
@@ -352,7 +356,7 @@ public class MainLayout implements Initializable {
     }
 
     @FXML
-    public void editFolder(FolderModel folder) {
+    public void editFolder(Folder folder) {
         semiTransparent.setVisible(true);
         saveAccountButton.setText("Update");
         nameFolderField.setText(folder.name);
@@ -463,8 +467,8 @@ public class MainLayout implements Initializable {
     }
 
     public void performSearch(String query) {
-        List<FolderModel> folders = new FolderManager().searchByName(query);
-        List<AccountModel> accounts = new AccountManager().searchByName(query);
+        List<Folder> folders = new FolderManager().searchByName(query);
+        List<Account> accounts = new AccountManager().searchByName(query);
 
         tilePane.getChildren().clear();
         folderControllerMap.clear();
@@ -474,8 +478,8 @@ public class MainLayout implements Initializable {
         renderSavedAccounts(accounts);
     }
 
-    public void renderSavedFolders(List<FolderModel> folders) {
-        for (FolderModel fold : folders) {
+    public void renderSavedFolders(List<Folder> folders) {
+        for (Folder fold : folders) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/folderCard.fxml"));
                 StackPane folder = loader.load();
@@ -494,8 +498,8 @@ public class MainLayout implements Initializable {
         }
     }
 
-    public void renderSavedAccounts(List<AccountModel> accounts) {
-        for (AccountModel acc : accounts) {
+    public void renderSavedAccounts(List<Account> accounts) {
+        for (Account acc : accounts) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/accountCard.fxml"));
                 StackPane card = loader.load();
@@ -527,7 +531,7 @@ public class MainLayout implements Initializable {
         backButton.setGraphic(arrowIcon);
         backButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
         backButton.setOnAction(e -> {
-            FolderModel current = FolderManager.getFolderById(currentFolderId);
+            Folder current = FolderManager.getFolderById(currentFolderId);
 
             if (current != null) {
                 int parentId = current.folder_id;

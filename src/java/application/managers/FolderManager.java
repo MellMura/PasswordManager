@@ -1,4 +1,8 @@
-package application;
+package application.managers;
+
+import application.models.Folder;
+import application.utils.JDBC_Handler;
+import application.models.UserSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +13,7 @@ import java.util.List;
 
 public class FolderManager {
 
-    public static FolderModel getFolderById(int id) {
+    public static Folder getFolderById(int id) {
         Connection connection = JDBC_Handler.connectDB();
         if (connection != null) {
             try {
@@ -19,7 +23,7 @@ public class FolderManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    return new FolderModel(resultSet.getInt("id"), resultSet.getInt("folder_id"), resultSet.getString("name"));
+                    return new Folder(resultSet.getInt("id"), resultSet.getInt("folder_id"), resultSet.getString("name"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -114,8 +118,8 @@ public class FolderManager {
         }
     }
 
-    public List<FolderModel> searchByName(String search) {
-        List<FolderModel> folders = new ArrayList<>();
+    public List<Folder> searchByName(String search) {
+        List<Folder> folders = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -127,7 +131,7 @@ public class FolderManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    folders.add(new FolderModel(
+                    folders.add(new Folder(
                             resultSet.getInt("id"),
                             resultSet.getInt("folder_id"),
                             resultSet.getString("name")
@@ -143,8 +147,8 @@ public class FolderManager {
         return folders;
     }
 
-    public List<FolderModel> fetchFolders(int folderId) {
-        List<FolderModel> folders = new ArrayList<>();
+    public List<Folder> fetchFolders(int folderId) {
+        List<Folder> folders = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -156,7 +160,7 @@ public class FolderManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    folders.add(new FolderModel(
+                    folders.add(new Folder(
                             resultSet.getInt("id"),
                             resultSet.getInt("folder_id"),
                             resultSet.getString("name")

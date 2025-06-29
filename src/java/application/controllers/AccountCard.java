@@ -1,7 +1,9 @@
-package application;
+package application.controllers;
 
+import application.managers.AccountManager;
+import application.models.Account;
+import application.models.Folder;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -41,13 +42,13 @@ public class AccountCard {
     private Button deleteButton;
     private MainLayout mainLayout;
 
-    private AccountModel currentModel;
-    private FolderModel currentFolderModel;
+    private Account currentModel;
+    private Folder currentFolderModel;
 
     private String originalPassword;
     private boolean isPasswordVisible = false;
 
-    public void setCurrentFolderModel(FolderModel folderModel) {
+    public void setCurrentFolderModel(Folder folderModel) {
         this.currentFolderModel = folderModel;
     }
 
@@ -215,7 +216,7 @@ public class AccountCard {
     }
 
     public void setData(int id, String name, String email, String password, String iconUrl, String colorHex) {
-        currentModel = new AccountModel(id, name, email, password, iconUrl, colorHex);
+        currentModel = new Account(id, name, email, password, iconUrl, colorHex);
         hoverButtons = new VBox(5);
         hoverButtons.setVisible(false);
         hoverButtons.setOpacity(0);
@@ -343,7 +344,7 @@ public class AccountCard {
 
     @FXML
     public void editAccount() {
-        AccountModel acc = new AccountModel();
+        Account acc = new Account();
         acc.id = (Integer) cardWrapper.getUserData();
         acc.name = nameLabel.getText();
         acc.email = emailValue.getText().replace("E-mail: ", "");

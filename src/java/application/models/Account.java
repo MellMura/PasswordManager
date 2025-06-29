@@ -1,6 +1,6 @@
-package application;
+package application.models;
 
-public class AccountModel {
+public class Account {
     public int id;
     public String name;
     public String email;
@@ -8,9 +8,9 @@ public class AccountModel {
     public String iconUrl;
     public String color;
 
-    public AccountModel() {}
+    public Account() {}
 
-    public AccountModel(int id, String name, String email, String password, String iconUrl, String color) {
+    public Account(int id, String name, String email, String password, String iconUrl, String color) {
         this.id = id;
         this.name = name;
         this.email = email;

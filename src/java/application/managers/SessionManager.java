@@ -1,17 +1,18 @@
-package application;
+package application.managers;
+
+import application.utils.JDBC_Handler;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.UUID;
 
-public class SessionHandler {
+public class SessionManager {
     private static final String SESSION_FILE = System.getProperty("user.home") + File.separator + ".session_token";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

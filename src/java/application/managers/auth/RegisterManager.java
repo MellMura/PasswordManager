@@ -1,5 +1,6 @@
-package application;
+package application.managers.auth;
 
+import application.utils.JDBC_Handler;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -7,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-public class Register {
+public class RegisterManager {
     public static boolean registerUser(String username, String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 

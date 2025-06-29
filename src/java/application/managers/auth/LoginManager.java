@@ -1,10 +1,12 @@
-package application;
+package application.managers.auth;
 
+import application.utils.JDBC_Handler;
+import application.models.UserSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 
-public class Login {
+public class LoginManager {
     public static Integer loginUser(String email, String password) {
         Connection connection = JDBC_Handler.connectDB();
 

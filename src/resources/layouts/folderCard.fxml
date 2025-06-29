@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="cardWrapper" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FolderCard">
+<StackPane fx:id="cardWrapper" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.FolderCard">
    <AnchorPane fx:id="rootPane" prefHeight="280.0" prefWidth="280.0">
       <children>
          <VBox alignment="TOP_CENTER" prefHeight="280.0" prefWidth="280.0">

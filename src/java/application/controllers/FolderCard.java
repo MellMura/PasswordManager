@@ -1,5 +1,8 @@
-package application;
+package application.controllers;
 
+import application.managers.AccountManager;
+import application.managers.FolderManager;
+import application.models.Folder;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,7 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class FolderCard {
-    private FolderModel currentModel;
+    private Folder currentModel;
 
     @FXML
     private Label nameFolderLabel;
@@ -100,7 +103,7 @@ public class FolderCard {
     }
 
     public void setData(int id, int folder_id, String name) {
-        currentModel = new FolderModel(id, folder_id, name);
+        currentModel = new Folder(id, folder_id, name);
         hoverButtons = new VBox(5);
         hoverButtons.setVisible(false);
         hoverButtons.setOpacity(0);

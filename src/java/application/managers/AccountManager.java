@@ -1,4 +1,9 @@
-package application;
+package application.managers;
+
+import application.utils.EncryptionHandler;
+import application.utils.JDBC_Handler;
+import application.models.Account;
+import application.models.UserSession;
 
 import java.io.File;
 import java.sql.Connection;
@@ -182,8 +187,8 @@ public class AccountManager {
         }
     }
 
-    public List<AccountModel> searchByName(String search) {
-        List<AccountModel> accounts = new ArrayList<>();
+    public List<Account> searchByName(String search) {
+        List<Account> accounts = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -197,7 +202,7 @@ public class AccountManager {
                 while (resultSet.next()) {
                     try{
                         String decryptedPassword = EncryptionHandler.decrypt(resultSet.getString("password"));
-                        accounts.add(new AccountModel(
+                        accounts.add(new Account(
                                 resultSet.getInt("id"),
                                 resultSet.getString("name"),
                                 resultSet.getString("email"),
@@ -221,8 +226,8 @@ public class AccountManager {
         return accounts;
     }
 
-    public List<AccountModel> fetchAccounts(int folderId) {
-        List<AccountModel> accounts = new ArrayList<>();
+    public List<Account> fetchAccounts(int folderId) {
+        List<Account> accounts = new ArrayList<>();
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
@@ -236,7 +241,7 @@ public class AccountManager {
                 while (resultSet.next()) {
                     try{
                         String decryptedPassword = EncryptionHandler.decrypt(resultSet.getString("password"));
-                        accounts.add(new AccountModel(
+                        accounts.add(new Account(
                                 resultSet.getInt("id"),
                                 resultSet.getString("name"),
                                 resultSet.getString("email"),

@@ -1,5 +1,6 @@
-package application;
+package application.controllers;
 
+import application.managers.auth.RegisterManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,7 +44,7 @@ public class RegLayout {
                 return;
             }
 
-            boolean success = Register.registerUser(username, email, password);
+            boolean success = RegisterManager.registerUser(username, email, password);
             if (success) {
                 switchToLoginScene();
             }

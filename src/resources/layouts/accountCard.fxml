@@ -13,7 +13,7 @@
 <StackPane fx:id="cardWrapper"
            xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="application.AccountCard"
+           fx:controller="application.controllers.AccountCard"
            onMouseEntered="#handleMouseEntered"
            onMouseExited="#handleMouseExited">
    <AnchorPane fx:id="rootPane" prefHeight="280.0" prefWidth="280.0">

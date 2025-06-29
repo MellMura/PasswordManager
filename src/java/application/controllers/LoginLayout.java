@@ -1,5 +1,8 @@
-package application;
+package application.controllers;
 
+import application.managers.auth.LoginManager;
+import application.managers.SessionManager;
+import application.models.UserSession;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class LoginLayout {
     @FXML private TextField emailField;
@@ -25,7 +27,7 @@ public class LoginLayout {
     @FXML
     public void initialize() {
         Platform.runLater(() -> rootPane.requestFocus());
-        String lastEmail = SessionHandler.loadEmail();
+        String lastEmail = SessionManager.loadEmail();
         emailField.setText(lastEmail);
 
         loginButton.setOnAction(event -> {
@@ -37,13 +39,13 @@ public class LoginLayout {
                 return;
             }
 
-            Integer userId = Login.loginUser(email, password);
+            Integer userId = LoginManager.loginUser(email, password);
 
             if (userId != null) {
                 System.out.println("Login successful!");
-                SessionHandler.saveEmail(email);
-                String token = SessionHandler.generateToken();
-                SessionHandler.saveSession(userId, email, token);
+                SessionManager.saveEmail(email);
+                String token = SessionManager.generateToken();
+                SessionManager.saveSession(userId, email, token);
                 UserSession.setCurrentUserId(userId);
 
                 try {

@@ -1,4 +1,6 @@
 package application;
+import application.utils.EncryptionHandler;
+import application.utils.EnvHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

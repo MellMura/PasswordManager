@@ -1,4 +1,4 @@
-package application;
+package application.models;
 
 public class UserSession {
     private static int userId;
