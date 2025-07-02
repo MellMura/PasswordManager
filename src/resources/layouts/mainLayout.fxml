@@ -23,9 +23,20 @@
          <children>
             <HBox fx:id="header" alignment="CENTER">
                <children>
+                  <Button fx:id="logoutButton" onAction="#logOut">
+                     <graphic>
+                        <ImageView fitWidth="40" fitHeight="40">
+                           <image>
+                              <Image url="@/icons/door-open.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Region HBox.hgrow="ALWAYS"/>
                   <Label fx:id="usernameLabel"
                          text="User's passwords"
                          />
+                  <Region HBox.hgrow="ALWAYS"/>
                </children>
             </HBox>
             <StackPane fx:id="stack" VBox.vgrow="ALWAYS">

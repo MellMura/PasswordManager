@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.managers.AccountManager;
+import application.managers.SessionManager;
 import application.models.Account;
 import application.managers.FolderManager;
 import application.models.Folder;
@@ -13,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -24,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -101,13 +105,13 @@ public class MainLayout implements Initializable {
         }
 
         ImageView passwordIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/key.png")));
-        passwordIcon.setFitWidth(18);
-        passwordIcon.setFitHeight(18);
+        passwordIcon.setFitWidth(20);
+        passwordIcon.setFitHeight(20);
         passwordButton.setGraphic(passwordIcon);
 
         ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder.png")));
-        folderIcon.setFitWidth(18);
-        folderIcon.setFitHeight(18);
+        folderIcon.setFitWidth(20);
+        folderIcon.setFitHeight(20);
         folderButton.setGraphic(folderIcon);
 
         ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/add-image.png")));
@@ -565,6 +569,7 @@ public class MainLayout implements Initializable {
                 try {
                     int accountId = Integer.parseInt(db.getString());
                     AccountManager.dragToFolderId(accountId, 0);
+                    //TODO: fix so it doesn't always gets moved to folder 0
                     loadFolderData(currentFolderId);
                     success = true;
                 } catch (NumberFormatException e) {
@@ -578,5 +583,23 @@ public class MainLayout implements Initializable {
 
         arrowCard.getChildren().add(backButton);
         return arrowCard;
+    }
+
+    @FXML
+    private void logOut () {
+        SessionManager.clearSession();
+
+        UserSession.setCurrentUserId(0);
+        UserSession.setUsername(null);
+
+        try {
+            Parent loginRoot = FXMLLoader.load(getClass().getResource("/layouts/loginLayout.fxml"));
+            Scene loginScene = new Scene(loginRoot);
+            Stage stage = (Stage) tilePane.getScene().getWindow();
+            stage.setScene(loginScene);
+            stage.setTitle("Login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -237,3 +237,8 @@
     -fx-faint-focus-color: transparent;
     -fx-background-insets: 0;
 }
+
+#logoutButton {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}

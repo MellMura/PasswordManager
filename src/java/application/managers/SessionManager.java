@@ -40,6 +40,7 @@ public class SessionManager {
         }
     }
 
+    //TODO:check why never used
     public static Integer validateSessionToken() {
         try {
             String token = Files.readString(Path.of(SESSION_FILE)).trim();
