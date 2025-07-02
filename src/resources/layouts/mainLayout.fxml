@@ -37,6 +37,15 @@
                          text="User's passwords"
                          />
                   <Region HBox.hgrow="ALWAYS"/>
+                  <Button fx:id="exportButton" onAction="#exportAccounts">
+                     <graphic>
+                        <ImageView fitWidth="40" fitHeight="40">
+                           <image>
+                              <Image url="@/icons/arrow-up.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </HBox>
             <StackPane fx:id="stack" VBox.vgrow="ALWAYS">
