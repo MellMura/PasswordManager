@@ -316,7 +316,15 @@ public class AccountCard {
         String name = nameLabel.getText();
         boolean success = AccountManager.removeAccount(name);
         if (success) {
-            mainLayout.loadFolderData(currentFolderModel.id);
+            int folder = (currentFolderModel != null)
+                    ? currentFolderModel.id
+                    : mainLayout.getCurrentFolderId();
+            if (folder == 0) {
+                mainLayout.loadInitialData();
+            }
+            else{
+                mainLayout.loadFolderData(folder);
+            }
         }
     }
 

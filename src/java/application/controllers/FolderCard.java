@@ -106,7 +106,11 @@ public class FolderCard {
         boolean success = FolderManager.removeFolder(currentModel.name);
 
         if (success) {
-            mainLayout.loadFolderData(parentFolderId);
+            if(parentFolderId == 0) {
+                mainLayout.loadInitialData();
+            } else {
+                mainLayout.loadFolderData(parentFolderId);
+            }
         }
     }
 
