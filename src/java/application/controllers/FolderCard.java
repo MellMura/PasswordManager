@@ -45,9 +45,13 @@ public class FolderCard {
                     int accountId = Integer.parseInt(db.getString());
                     int folderId = (Integer) cardWrapper.getUserData();
 
-                    AccountManager.updateFolderId(accountId, folderId);
+                    AccountManager.dragToFolderId(accountId, folderId);
 
-                    mainLayout.loadInitialData();
+                    if (folderId == 0) {
+                        mainLayout.loadInitialData();
+                    } else {
+                        mainLayout.loadFolderData(folderId);
+                    }
 
                     success = true;
                 } catch (NumberFormatException e) {
@@ -95,10 +99,14 @@ public class FolderCard {
     }
 
     public void deleteFolder() {
-        String name = nameFolderLabel.getText();
-        boolean success = FolderManager.removeFolder(name);
+        int folderId = currentModel.id;
+        int parentFolderId = currentModel.folder_id;
+
+        AccountManager.changeFolderId(folderId, parentFolderId);
+        boolean success = FolderManager.removeFolder(currentModel.name);
+
         if (success) {
-            mainLayout.loadFolderData(currentModel.folder_id);
+            mainLayout.loadFolderData(parentFolderId);
         }
     }
 

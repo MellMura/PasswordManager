@@ -78,35 +78,15 @@ public class AccountCard {
             boolean success = false;
 
             if (db.hasString()) {
-                Node draggedNode = (Node) event.getGestureSource();
+                int draggedId = Integer.parseInt(db.getString());
 
-                Node draggedWrapper = draggedNode;
-                Node targetWrapper = cardWrapper;
-
-                // Traverse up to the outer StackPane wrapper
-                while (!(draggedWrapper.getParent() instanceof TilePane)) {
-                    draggedWrapper = draggedWrapper.getParent();
+                if (currentFolderModel != null) {
+                    boolean moved = AccountManager.dragToFolderId(draggedId, currentFolderModel.id);
+                    if (moved) {
+                        mainLayout.loadFolderData(currentFolderModel.id);
+                        success = true;
+                    }
                 }
-                while (!(targetWrapper.getParent() instanceof TilePane)) {
-                    targetWrapper = targetWrapper.getParent();
-                }
-
-                TilePane parent = (TilePane) targetWrapper.getParent();
-                ObservableList<Node> children = parent.getChildren();
-
-                int fromIndex = children.indexOf(draggedWrapper);
-                int toIndex = children.indexOf(targetWrapper);
-
-                if (fromIndex != -1 && toIndex != -1 && fromIndex != toIndex) {
-                    children.remove(fromIndex);
-                    children.add(toIndex, draggedWrapper);
-
-                    int draggedId = Integer.parseInt(db.getString());
-                    AccountManager.reorderPositions(fromIndex + 1, toIndex + 1, draggedId);
-                    mainLayout.loadInitialData();
-                }
-
-                success = true;
             }
 
             event.setDropCompleted(success);
@@ -331,8 +311,6 @@ public class AccountCard {
             System.out.println("Invalid color: " + colorHex);
         }
     }
-
-
 
     public void deleteAccount() {
         String name = nameLabel.getText();

@@ -29,17 +29,7 @@ public class AccountManager {
                     return false;
                 }
 
-                String posQuery = "SELECT MAX(position) AS max_pos FROM saved_accounts WHERE user_id = ?";
-                PreparedStatement posStatement = connection.prepareStatement(posQuery);
-                posStatement.setInt(1, userId);
-                ResultSet rs = posStatement.executeQuery();
-
-                int nextPosition = 1;
-                if (rs.next()) {
-                    nextPosition = rs.getInt("max_pos") + 1;
-                }
-
-                String sql = "INSERT INTO saved_accounts (user_id, folder_id, name, email, password, icon_url, color, position) " +
+                String sql = "INSERT INTO saved_accounts (user_id, folder_id, name, email, password, icon_url, color) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -50,7 +40,6 @@ public class AccountManager {
                 preparedStatement.setString(5, encryptedPassword);
                 preparedStatement.setString(6, iconPath);
                 preparedStatement.setString(7, colorHex);
-                preparedStatement.setInt(8, nextPosition);
 
                 int rowsInserted = preparedStatement.executeUpdate();
 
@@ -156,34 +145,73 @@ public class AccountManager {
             System.out.println("Database connection failed.");
             return false;
         }
+
     }
 
-    public static boolean updateFolderId(int accountId, int folderId) {
+    public static boolean dragToFolderId(int accountId, int folderId) {
         Connection connection = JDBC_Handler.connectDB();
 
         if (connection != null) {
             try {
-                String sql = "UPDATE saved_accounts SET folder_id = ? WHERE id = ?";
+                String posQuery = "SELECT MAX(position) AS max_pos FROM saved_accounts WHERE folder_id = ?";
+                PreparedStatement posStmt = connection.prepareStatement(posQuery);
+                posStmt.setInt(1, folderId);
+                ResultSet rs = posStmt.executeQuery();
 
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setInt(1, folderId);
-                preparedStatement.setInt(2, accountId);
-
-                int rowsUpdated = preparedStatement.executeUpdate();
-                if (rowsUpdated > 0) {
-                    return true;
-                } else {
-                    System.out.println("Folder id updating failed.");
-                    return false;
+                int nextPosition = 1;
+                if (rs.next()) {
+                    nextPosition = rs.getInt("max_pos") + 1;
                 }
-            }
-            catch (SQLException e) {
+
+                String sql = "UPDATE saved_accounts SET folder_id = ?, position = ? WHERE id = ?";
+                PreparedStatement updateStmt = connection.prepareStatement(sql);
+                updateStmt.setInt(1, folderId);
+                updateStmt.setInt(2, nextPosition);
+                updateStmt.setInt(3, accountId);
+
+                int rowsUpdated = updateStmt.executeUpdate();
+                return rowsUpdated > 0;
+
+            } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
         } else {
             System.out.println("Database connection failed.");
             return false;
+        }
+    }
+
+    public static void changeFolderId(int fromFolderId, int toFolderId) {
+        Connection connection = JDBC_Handler.connectDB();
+
+        if (connection != null) {
+            try {
+                String moveSql = "UPDATE saved_accounts SET folder_id = ? WHERE folder_id = ?";
+                PreparedStatement moveStatement = connection.prepareStatement(moveSql);
+                moveStatement.setInt(1, toFolderId);
+                moveStatement.setInt(2, fromFolderId);
+                moveStatement.executeUpdate();
+
+                String fetchSql = "SELECT id FROM saved_accounts WHERE folder_id = ? ORDER BY position ASC";
+                PreparedStatement fetchStatement = connection.prepareStatement(fetchSql);
+                fetchStatement.setInt(1, toFolderId);
+                ResultSet rs = fetchStatement.executeQuery();
+
+                int newPos = 1;
+                while (rs.next()) {
+                    int accId = rs.getInt("id");
+                    PreparedStatement updateStatement = connection.prepareStatement(
+                            "UPDATE saved_accounts SET position = ? WHERE id = ?"
+                    );
+                    updateStatement.setInt(1, newPos++);
+                    updateStatement.setInt(2, accId);
+                    updateStatement.executeUpdate();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -232,7 +260,7 @@ public class AccountManager {
 
         if (connection != null) {
             try {
-                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? AND folder_id = ? ORDER BY position ASC";
+                String sql = "SELECT id, name, email, password, icon_url, color FROM saved_accounts WHERE user_id = ? AND folder_id = ? ORDER BY name ASC";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, UserSession.getUserId());
                 preparedStatement.setInt(2, folderId);
@@ -265,36 +293,4 @@ public class AccountManager {
         return accounts;
     }
 
-    public static void reorderPositions(int fromPosition, int toPosition, int draggedId) {
-        try (Connection conn = JDBC_Handler.connectDB()) {
-            conn.setAutoCommit(false);
-
-            if (fromPosition < toPosition) {
-                PreparedStatement shiftUp = conn.prepareStatement(
-                        "UPDATE saved_accounts SET position = position - 1 WHERE position > ? AND position <= ?"
-                );
-                shiftUp.setInt(1, fromPosition);
-                shiftUp.setInt(2, toPosition);
-                shiftUp.executeUpdate();
-            } else if (fromPosition > toPosition) {
-                PreparedStatement shiftDown = conn.prepareStatement(
-                        "UPDATE saved_accounts SET position = position + 1 WHERE position >= ? AND position < ?"
-                );
-                shiftDown.setInt(1, toPosition);
-                shiftDown.setInt(2, fromPosition);
-                shiftDown.executeUpdate();
-            }
-
-            PreparedStatement updateDragged = conn.prepareStatement(
-                    "UPDATE saved_accounts SET position = ? WHERE id = ?"
-            );
-            updateDragged.setInt(1, toPosition);
-            updateDragged.setInt(2, draggedId);
-            updateDragged.executeUpdate();
-
-            conn.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

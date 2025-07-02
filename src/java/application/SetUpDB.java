@@ -39,8 +39,7 @@ public class SetUpDB {
                             "email VARCHAR(100) NOT NULL, " +
                             "password VARCHAR(100) NOT NULL, " +
                             "icon_url VARCHAR(60), " +
-                            "color VARCHAR(10), " +
-                            "position INT NOT NULL" +
+                            "color VARCHAR(10)" +
                             ")"
             );
 

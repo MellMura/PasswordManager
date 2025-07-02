@@ -560,7 +560,7 @@ public class MainLayout implements Initializable {
             if (db.hasString()) {
                 try {
                     int accountId = Integer.parseInt(db.getString());
-                    AccountManager.updateFolderId(accountId, 0);
+                    AccountManager.dragToFolderId(accountId, 0);
                     loadFolderData(currentFolderId);
                     success = true;
                 } catch (NumberFormatException e) {
