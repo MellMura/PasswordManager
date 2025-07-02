@@ -66,6 +66,10 @@ public class MainLayout implements Initializable {
     private final Map<Node, FolderCard> folderControllerMap = new HashMap<>();
     private final Map<Node, AccountCard> accountControllerMap = new HashMap<>();
 
+
+    public int getCurrentFolderId() {
+        return currentFolderId;
+    }
     public Pane getHoverLayer() {
         return hoverOverlay;
     }

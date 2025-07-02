@@ -30,7 +30,7 @@ public class AccountManager {
                 }
 
                 String sql = "INSERT INTO saved_accounts (user_id, folder_id, name, email, password, icon_url, color) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, userId);
@@ -153,21 +153,10 @@ public class AccountManager {
 
         if (connection != null) {
             try {
-                String posQuery = "SELECT MAX(position) AS max_pos FROM saved_accounts WHERE folder_id = ?";
-                PreparedStatement posStmt = connection.prepareStatement(posQuery);
-                posStmt.setInt(1, folderId);
-                ResultSet rs = posStmt.executeQuery();
-
-                int nextPosition = 1;
-                if (rs.next()) {
-                    nextPosition = rs.getInt("max_pos") + 1;
-                }
-
-                String sql = "UPDATE saved_accounts SET folder_id = ?, position = ? WHERE id = ?";
+                String sql = "UPDATE saved_accounts SET folder_id = ? WHERE id = ?";
                 PreparedStatement updateStmt = connection.prepareStatement(sql);
                 updateStmt.setInt(1, folderId);
-                updateStmt.setInt(2, nextPosition);
-                updateStmt.setInt(3, accountId);
+                updateStmt.setInt(2, accountId);
 
                 int rowsUpdated = updateStmt.executeUpdate();
                 return rowsUpdated > 0;
@@ -193,21 +182,10 @@ public class AccountManager {
                 moveStatement.setInt(2, fromFolderId);
                 moveStatement.executeUpdate();
 
-                String fetchSql = "SELECT id FROM saved_accounts WHERE folder_id = ? ORDER BY position ASC";
+                String fetchSql = "SELECT id FROM saved_accounts WHERE folder_id = ? ORDER BY name ASC";
                 PreparedStatement fetchStatement = connection.prepareStatement(fetchSql);
                 fetchStatement.setInt(1, toFolderId);
                 ResultSet rs = fetchStatement.executeQuery();
-
-                int newPos = 1;
-                while (rs.next()) {
-                    int accId = rs.getInt("id");
-                    PreparedStatement updateStatement = connection.prepareStatement(
-                            "UPDATE saved_accounts SET position = ? WHERE id = ?"
-                    );
-                    updateStatement.setInt(1, newPos++);
-                    updateStatement.setInt(2, accId);
-                    updateStatement.executeUpdate();
-                }
 
             } catch (SQLException e) {
                 e.printStackTrace();

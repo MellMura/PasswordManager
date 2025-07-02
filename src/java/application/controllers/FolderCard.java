@@ -47,10 +47,10 @@ public class FolderCard {
 
                     AccountManager.dragToFolderId(accountId, folderId);
 
-                    if (folderId == 0) {
+                    if (mainLayout.getCurrentFolderId() == 0) {
                         mainLayout.loadInitialData();
                     } else {
-                        mainLayout.loadFolderData(folderId);
+                        mainLayout.loadFolderData(mainLayout.getCurrentFolderId());
                     }
 
                     success = true;
