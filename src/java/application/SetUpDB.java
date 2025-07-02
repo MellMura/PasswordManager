@@ -66,6 +66,9 @@ public class SetUpDB {
             System.out.println("Table 'saved_accounts' ensured.");
             System.out.println("Table 'session_tokens' ensured.");
             System.out.println("Table 'folders' ensured.");
+
+            statement.executeUpdate("DELETE FROM session_tokens WHERE expires_at < NOW()");
+            System.out.println("Expired session tokens cleaned up.");
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
